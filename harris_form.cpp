@@ -34,8 +34,9 @@ HarrisForm::HarrisForm(QWidget *parent)
 	QObject::connect(ui.addButton, SIGNAL(clicked()), this, SLOT(addImages()));
 	QObject::connect(ui.removeButton, SIGNAL(clicked()), this, SLOT(removeItem()));
 	QObject::connect(ui.fileListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(updateImage()));
-	QObject::connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(updateProcessed()));
-	QObject::connect(ui.goButton, SIGNAL(clicked()), this, SLOT(processImages()));
+	QObject::connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(drawPoints()));
+	QObject::connect(ui.radSigma7, SIGNAL(toggled(bool)), this, SLOT(drawProcessed()));
+	//QObject::connect(ui.goButton, SIGNAL(clicked()), this, SLOT(processImages()));
 
 
 	files.clear();
@@ -55,16 +56,22 @@ void HarrisForm::addImages() {
 	if (!fileNames.isEmpty()) {
 		//ui.fileListWidget->addItems(fileNames);
 		for (QList<QString>::iterator it = fileNames.begin(); it != fileNames.end(); it++) {
-			files.push_back(it->toStdString());
-			images.push_back(TCD::Image(it->toLocal8Bit().constData()));
+			//files.push_back(it->toStdString());
+			images.push_back(new TCD::Image(ui.fileListWidget, it->toLocal8Bit().constData()));
+			//ui.fileListWidget->addItem(new TCD::Image(ui.fileListWidget, it->toLocal8Bit().constData()));
+			
 		}
 	}
-	update();
+	if (ui.fileListWidget->count() > 0 && ui.fileListWidget->currentRow() == -1) {
+		ui.fileListWidget->setCurrentRow(0);
+	}
+	//update();
 }
 
 void HarrisForm::updateImage() {
 	try { if (ui.fileListWidget->currentIndex().row() != -1) {
-		QString fileName = ui.fileListWidget->currentItem()->text();
+		m_image = (TCD::Image*)ui.fileListWidget->currentItem();
+		QString fileName = QString::fromLocal8Bit(m_image->getFilename().data());//ui.fileListWidget->currentItem()->text();
 		if (!fileName.isEmpty()) {
 			//Mat image_temp = cv::imread(fileName.toStdString(), CV_LOAD_IMAGE_COLOR);
 			image.load(fileName);
@@ -74,42 +81,50 @@ void HarrisForm::updateImage() {
 				return;
 			}
 			
-			m_image = imread(fileName.toLocal8Bit().constData());
+			//m_image = imread(fileName.toLocal8Bit().constData());
 
 			labelOriginal->setPixmap(QPixmap::fromImage(image));
 			labelOriginal->adjustSize();
 
-			updateProcessed();
+			drawProcessed();
 		}
 		}
 	} catch(...) {
 		throw;
 	}
 };
-void HarrisForm::updateProcessed() {
-	if (!m_image.empty()) {
-		Mat gradient;
-		cvtColor(m_image, gradient, CV_BGR2GRAY);
-		harris.init(gradient);
-		Mat response = harris.getResponse();
+void HarrisForm::drawProcessed() {
+	
+	if (ui.radSigma7->isChecked()) {
+		m_image->runHarris(0.7);
+	} else {
+		m_image->runHarris(1.4);
+	}
+	drawPoints();
 
+}
+
+void HarrisForm::drawPoints() {
+	if (m_image->isHarrisDone()) {
+		Mat gradient = m_image->getGrayscale().clone();
+		Mat response = m_image->m_response.clone();
 		normalize(response, response, 0, 255, NORM_MINMAX, CV_8UC1);
 		labelResponse->setPixmap(QPixmap::fromImage(Mat2QImageGrey(response)));
 		labelResponse->adjustSize();
 
-		Mat circles;
-		cvtColor(m_image, circles, CV_BGR2GRAY);
-		vector<Point2i> points;
-		harris.getCorners(points);//ui.horizontalSlider->value());
+		//cvtColor(m_image, circles, CV_BGR2GRAY);
+		vector<Point2i> points = m_image->getCorners(ui.horizontalSlider->value());
+		//harris.getCorners(points);//ui.horizontalSlider->value());
+		cvtColor(gradient, gradient, CV_GRAY2RGB);
 		for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {
-			circle(circles, *i, 1, Scalar(0,0,255), 1, 8, 0);
+			circle(gradient, *i, 1, Scalar(50,0,255), 2, 8, 0);
 		}
-		
-		labelCorners->setPixmap(QPixmap::fromImage(Mat2QImageGrey(circles)));
+
+		labelCorners->setPixmap(QPixmap::fromImage(Mat2QImageColor(gradient)));
 		labelCorners->adjustSize();
+
 	}
 }
-
 void HarrisForm::update() {
 	ui.fileListWidget->clear();
 
@@ -124,6 +139,7 @@ void HarrisForm::removeItem() {
 			files.remove(ui.fileListWidget->currentItem()->text().toLocal8Bit().constData());
 			//ui.fileListWidget->removeItemWidget(ui.fileListWidget->currentItem());
 			qDeleteAll(ui.fileListWidget->selectedItems());
+			//TODO current row change
 		} catch(...) {
 			throw;
 		}

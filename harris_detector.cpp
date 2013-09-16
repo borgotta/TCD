@@ -7,12 +7,21 @@ using namespace cv;
 
 HarrisDetector::HarrisDetector() {}
 HarrisDetector::~HarrisDetector() {}
-void HarrisDetector::init(Mat image) {
-	m_image = image;	
+void HarrisDetector::init(Mat image, float sigma) {
+
+	image.convertTo(m_image, CV_32F);
+	// initialize the output matrix with zeros
+	//Mat new_image = Mat::zeros( image.size(), image.type() );
+ //
+	//// create a matrix with all elements equal to 255 for subtraction
+	//Mat sub_mat = Mat::ones(image.size(), image.type())*255;
+	//subtract(sub_mat, image, new_image);
+	//new_image.convertTo(m_image, CV_32F);
+
 	m_height = m_image.rows;
 	m_width = m_image.cols;
-	m_sigmaD = 1.4;
-	m_sigmaI = 1.4;
+	m_sigmaD = sigma;
+	m_sigmaI = sigma;
 	setGaussD(m_sigmaD, m_gaussD);
 	setGaussI(m_sigmaI, m_gaussI); 
 	setDerivatives();
@@ -26,22 +35,26 @@ void HarrisDetector::setDerivatives() {
 
 void HarrisDetector::preprocess() {
 	m_image.copyTo(m_dIdx);
+	//m_dIdx = m_image.clone();
 	//m_dIdx = m_image;
 
 	vector<float> dfilter, ifilter;
 	dfilter.resize(3);
-	dfilter[0] = -0.5;  dfilter[1] = 0;  dfilter[2] = 0.5;
+	dfilter[0] = -1.0;  dfilter[1] = 0;  dfilter[2] = 1.0;
 	ifilter.resize(3);
 	ifilter[0] = 1.0 / 3.0;  ifilter[1] = 1.0 / 3.0;  ifilter[2] = 1.0 / 3.0;
 
 	convolveX(m_dIdx, dfilter, m_dIdx);
-	convolveY(m_dIdx, ifilter, m_dIdx);
+	//convolveY(m_dIdx, ifilter, m_dIdx);
+	//convolveX(m_dIdx, m_gaussD, m_dIdx);
 
+	//m_dIdy = m_image.clone();
 	m_image.copyTo(m_dIdy);
 	//m_dIdy = m_image;
 
-	convolveX(m_dIdy, ifilter, m_dIdy);
+	//convolveX(m_dIdy, ifilter, m_dIdy);
 	convolveY(m_dIdy, dfilter, m_dIdy);
+	//convolveY(m_dIdy, m_gaussD, m_dIdy);
 }
 
 void HarrisDetector::preprocess2() {
@@ -50,8 +63,8 @@ void HarrisDetector::preprocess2() {
 	m_dIdxdIdy = Mat::zeros(m_height, m_width, CV_32F);
 
 	float *pm_dIdxdIdx = m_dIdxdIdx.ptr<float>();
-	float *pm_dIdydIdy = m_dIdxdIdx.ptr<float>();
-	float *pm_dIdxdIdy = m_dIdxdIdx.ptr<float>();
+	float *pm_dIdydIdy = m_dIdydIdy.ptr<float>();
+	float *pm_dIdxdIdy = m_dIdxdIdy.ptr<float>();
 	for (int y = 0; y < m_height; ++y) {
 		for (int x = 0; x < m_width; ++x) {
 			
@@ -135,13 +148,20 @@ void HarrisDetector::setResponse() {
 	float *pm_response = m_response.ptr<float>();
 	for (int y = 0; y < m_height; ++y) {
 		for (int x = 0; x < m_width; ++x) {
+			//const float dIdxdIdx = m_dIdxdIdx.at<float>(y,x);
+			//const float dIdydIdy = m_dIdydIdy.at<float>(y,x);
+			//const float dIdxdIdy = m_dIdxdIdy.at<float>(y,x);
+			//if (dIdydIdy != 0.0) cout<<"dIdydIdy("<<y<<","<<x<<") = "<<dIdydIdy<<endl;
 			const float D = m_dIdxdIdx.at<float>(y,x) * m_dIdydIdy.at<float>(y,x) - m_dIdxdIdy.at<float>(y,x) * m_dIdxdIdy.at<float>(y,x);
 			const float tr = m_dIdxdIdx.at<float>(y,x) + m_dIdydIdy.at<float>(y,x);
-			pm_response[y*m_width + x] = D - 0.06 * tr * tr;
+			//const float resp = D - 0.4 * tr * tr;
+			pm_response[y*m_width + x] = -(D - 0.4 * tr * tr);
 		}
 	}
 }
 void HarrisDetector::getCorners(vector<Point2i> &dst, float threshold) {
+
+	dst.clear();
 	//----------------------------------------------------------------------
 	// suppress non local max
 	Mat temp = Mat::zeros(m_height, m_width, CV_32F);
@@ -149,18 +169,26 @@ void HarrisDetector::getCorners(vector<Point2i> &dst, float threshold) {
 	float *ptemp = temp.ptr<float>();
 	for (int y = 1; y < m_height - 1; ++y) {
 		for (int x = 1; x < m_width - 1; ++x) {
-			if (m_response.at<float>(y,x) >= m_response.at<float>(y,x+1) &&
-				m_response.at<float>(y,x) >= m_response.at<float>(y,x-1) &&
-				m_response.at<float>(y,x) >= m_response.at<float>(y+1,x) &&
-				m_response.at<float>(y,x) >= m_response.at<float>(y-1,x))
-				ptemp[y*m_width + x] = m_response.at<float>(y,x);
+			if (m_response.at<float>(y,x) > m_response.at<float>(y,x+1) &&
+				m_response.at<float>(y,x) > m_response.at<float>(y,x-1) &&
+				m_response.at<float>(y,x) > m_response.at<float>(y+1,x) &&
+				m_response.at<float>(y,x) > m_response.at<float>(y-1,x)) //&&
+			//	m_response.at<float>(y,x) >= m_response.at<float>(y-1,x-1) &&
+			//	m_response.at<float>(y,x) >= m_response.at<float>(y-1,x+1) &&
+			//	m_response.at<float>(y,x) >= m_response.at<float>(y+1,x-1) &&
+			//	m_response.at<float>(y,x) >= m_response.at<float>(y+1,x+1)) 
+			{
+					float value = m_response.at<float>(y,x);
+					//cout<<"("<<x<<","<<y<<")= "<<value<<" ";
+					ptemp[y*m_width + x] = value;
+			}
 		}
 	}
-	//normalize(temp,temp,0,255,NORM_MINMAX,CV_8U);
+	normalize(temp,temp,0,255,NORM_MINMAX,CV_8U);
 	dst = vector<Point2i>();
 	for (int y = 0; y < m_height; y++) {
 		for (int x = 0; x < m_width; x++) {
-			if (temp.at<float>(y,x) > 0 && temp.at<float>(y,x) > threshold) {
+			if (temp.at<uchar>(y,x) > 0.0 && temp.at<uchar>(y,x) > threshold) {
 				dst.push_back(Point2i(x,y));
 			}
 		}

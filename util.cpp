@@ -54,9 +54,32 @@ void convolveX(Mat& src, const std::vector<float>& filter, Mat& dst){
 	const int width = src.cols;
 	const int height = src.rows;
 	const int margin = ((int)filter.size()) / 2;
-	src.convertTo(dst, CV_32F); //to float
+	//src.convertTo(dst, CV_32F); //to float
 	Mat result = Mat::zeros(height, width, CV_32F);
-	float *data_dst = dst.ptr<float>();
+	float *data_src = src.ptr<float>();
+	float *data_result = result.ptr<float>();
+	for (int y = 0; y < height; ++y) {
+		for (int x = 0; x < width; ++x) {
+			
+			for (int j = 0; j < (int)filter.size(); ++j) {
+				const int xtmp = x+ j - margin;
+				const int ytmp = y;
+				if (xtmp < 0 || width <= xtmp)
+					continue;
+
+				data_result[y*width + x] += filter[j] * data_src[ytmp*width + xtmp];
+			}
+		}
+	}
+	dst = result;
+}
+void convolveY(Mat& src, const std::vector<float>& filter, Mat& dst){
+	const int width = src.cols;
+	const int height = src.rows;
+	const int margin = ((int)filter.size()) / 2;
+	//src.convertTo(dst, CV_32F); //to float
+	Mat result = Mat::zeros(height, width, CV_32F);
+	float *data_src = src.ptr<float>();
 	float *data_result = result.ptr<float>();
 	for (int y = 0; y < height; ++y) {
 		for (int x = 0; x < width; ++x) {
@@ -67,30 +90,7 @@ void convolveX(Mat& src, const std::vector<float>& filter, Mat& dst){
 				if (ytmp < 0 || height <= ytmp)
 					continue;
 
-				data_result[y*width + x] += filter[j] * data_dst[ytmp*width + xtmp];
-			}
-		}
-	}
-	dst = result;
-}
-void convolveY(Mat& src, const std::vector<float>& filter, Mat& dst){
-	const int width = src.cols;
-	const int height = src.rows;
-	const int margin = ((int)filter.size()) / 2;
-	src.convertTo(dst, CV_32F); //to float
-	Mat result = Mat::zeros(height, width, CV_32F);
-	float *data_dst = dst.ptr<float>();
-	float *data_result = result.ptr<float>();
-	for (int y = 0; y < height; ++y) {
-		for (int x = 0; x < width; ++x) {
-			
-			for (int j = 0; j < (int)filter.size(); ++j) {
-				const int xtmp = x + j - margin;
-				const int ytmp = y;
-				if (xtmp < 0 || width <= xtmp)
-					continue;
-
-				data_result[y*width + x] += filter[j] * data_dst[ytmp*width + xtmp];
+				data_result[y*width + x] += filter[j] * data_src[ytmp*width + xtmp];
 			}
 		}
 	}
@@ -138,14 +138,6 @@ void Mat2Vector(const cv::Mat &src, std::vector<std::vector<float>> &dst) {
 			dst[y][x] = (float)psrc[y*width + x];
 		}
 	}
-}
-
-void hui(cv::Mat &src, float k) {
-	uchar* it = src.data;
-	for (int y = 0; y < src.rows; y++) 
-		for (int x = 0; x < src.cols; x++) {
-			it[y*src.cols + x] += (uchar)k;
-		}
 }
 
 Mat qimage2mat(const QImage& qimage) {

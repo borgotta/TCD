@@ -15,7 +15,8 @@ class HarrisForm : public QMainWindow
 private slots:
 	void addImages();
 	void updateImage();
-	void updateProcessed();
+	void drawProcessed();
+	void drawPoints();
 	void removeItem();
 	void update();
 	void processImages();
@@ -28,10 +29,10 @@ private:
 	Ui::HarrisForm ui;
 	HarrisDetector harris;
 	std::list<std::string> files;
-	std::vector<TCD::Image> images;
+	std::vector<TCD::Image*> images;
 	QLabel *labelOriginal;
 	QLabel *labelResponse;
 	QLabel *labelCorners;
 	QImage image;
-	cv::Mat m_image;
+	TCD::Image *m_image;
 };

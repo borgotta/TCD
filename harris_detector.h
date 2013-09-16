@@ -11,7 +11,7 @@ public:
 
 	static void setGaussD(const float sigmaD, std::vector<float>& gaussD);
 	static void setGaussI(const float sigmaI, std::vector<float>& gaussI);
-	void init(cv::Mat image);
+	void init(cv::Mat image, float sigma);
 	cv::Mat getResponse();
 	void getCorners(std::vector<cv::Point2i> &dst, float threshold = 0.0);
 

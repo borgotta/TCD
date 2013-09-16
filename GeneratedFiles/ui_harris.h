@@ -13,6 +13,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QListWidget>
@@ -20,6 +21,7 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QStatusBar>
@@ -45,6 +47,9 @@ public:
     QListWidget *fileListWidget;
     QSlider *horizontalSlider;
     QSpinBox *spinBox;
+    QGroupBox *gboxGaussian;
+    QRadioButton *radSigma7;
+    QRadioButton *radSigma14;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuHelp;
@@ -96,6 +101,9 @@ public:
         fileListWidget = new QListWidget(centralWidget);
         fileListWidget->setObjectName(QStringLiteral("fileListWidget"));
         fileListWidget->setGeometry(QRect(10, 10, 211, 261));
+        fileListWidget->setDragEnabled(false);
+        fileListWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
+        fileListWidget->setTextElideMode(Qt::ElideRight);
         horizontalSlider = new QSlider(centralWidget);
         horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
         horizontalSlider->setGeometry(QRect(20, 330, 141, 22));
@@ -105,6 +113,17 @@ public:
         spinBox->setObjectName(QStringLiteral("spinBox"));
         spinBox->setGeometry(QRect(170, 330, 51, 22));
         spinBox->setMaximum(255);
+        gboxGaussian = new QGroupBox(centralWidget);
+        gboxGaussian->setObjectName(QStringLiteral("gboxGaussian"));
+        gboxGaussian->setGeometry(QRect(20, 370, 91, 61));
+        gboxGaussian->setAutoFillBackground(true);
+        radSigma7 = new QRadioButton(gboxGaussian);
+        radSigma7->setObjectName(QStringLiteral("radSigma7"));
+        radSigma7->setGeometry(QRect(10, 20, 82, 17));
+        radSigma7->setChecked(true);
+        radSigma14 = new QRadioButton(gboxGaussian);
+        radSigma14->setObjectName(QStringLiteral("radSigma14"));
+        radSigma14->setGeometry(QRect(10, 40, 82, 17));
         HarrisForm->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(HarrisForm);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -143,6 +162,9 @@ public:
         goButton->setText(QApplication::translate("HarrisForm", "Save results", 0));
         addButton->setText(QApplication::translate("HarrisForm", "Add", 0));
         removeButton->setText(QApplication::translate("HarrisForm", "Remove", 0));
+        gboxGaussian->setTitle(QApplication::translate("HarrisForm", "Gauss sigma", 0));
+        radSigma7->setText(QApplication::translate("HarrisForm", "0.7", 0));
+        radSigma14->setText(QApplication::translate("HarrisForm", "1.4", 0));
         menuFile->setTitle(QApplication::translate("HarrisForm", "File", 0));
         menuHelp->setTitle(QApplication::translate("HarrisForm", "Help", 0));
     } // retranslateUi

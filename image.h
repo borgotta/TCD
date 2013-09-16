@@ -2,10 +2,12 @@
 
 #include <opencv2\core\core.hpp>
 #include "harris_detector.h"
+#include <qlistwidgetitem>
+#include <qlistwidget>
 
 
 namespace TCD {
-	class Image {
+	class Image : public QListWidgetItem {
 	public: 
 		cv::Mat m_response; 
 
@@ -16,11 +18,12 @@ namespace TCD {
 		std::vector<cv::Point2i> corners;
 
 	public:
-		Image(std::string filename);
+		Image(QListWidget *view, std::string filename);
 		~Image(void);
-		void runHarris(void);
+		void runHarris(float sigma = 0.7);
 		bool isHarrisDone(void);
 		std::string getFilename(void);
-		std::vector<cv::Point2i> getCorners(void);
+		std::vector<cv::Point2i> getCorners(float threshold = 0.0);
+		cv::Mat getGrayscale(void);
 	};
 };
