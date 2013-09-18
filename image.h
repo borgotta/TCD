@@ -23,7 +23,7 @@ namespace TCD {
 		void runHarris(float sigma = 0.7);
 		bool isHarrisDone(void);
 		std::string getFilename(void);
-		std::vector<cv::Point2i> getCorners(float threshold = 0.0);
+		std::vector<cv::Point2i> getCorners(float threshold = 0.0, int wind_n = 2);
 		cv::Mat getGrayscale(void);
 	};
 };

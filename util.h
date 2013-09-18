@@ -9,15 +9,16 @@
 using namespace std;
 using namespace cv;
 
-
-
-void convolveX(std::vector<std::vector<float>>& image,
-	const std::vector<float>& filter,
-	std::vector<std::vector<float>>& buffer);
-
-void convolveY(std::vector<std::vector<float>>& image,
-	const std::vector<float>& filter,
-	std::vector<std::vector<float>>& buffer);
+void setGaussD(const float sigmaD, std::vector<float>& gaussD);
+void setGaussI(const float sigmaI, std::vector<float>& gaussI);
+void nonMaximaSuppresion(Mat &src, int n, Mat &dst);
+//void convolveX(std::vector<std::vector<float>>& image,
+//	const std::vector<float>& filter,
+//	std::vector<std::vector<float>>& buffer);
+//
+//void convolveY(std::vector<std::vector<float>>& image,
+//	const std::vector<float>& filter,
+//	std::vector<std::vector<float>>& buffer);
 
 void convolveX(Mat& src, const std::vector<float>& filter, Mat& dst);
 void convolveY(Mat& src, const std::vector<float>& filter, Mat& dst);

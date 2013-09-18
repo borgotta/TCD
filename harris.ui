@@ -126,22 +126,22 @@
      <number>255</number>
     </property>
    </widget>
-   <widget class="QGroupBox" name="gboxGaussian">
+   <widget class="QGroupBox" name="gboxWindow">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>370</y>
-      <width>91</width>
-      <height>61</height>
+      <y>360</y>
+      <width>171</width>
+      <height>101</height>
      </rect>
     </property>
     <property name="autoFillBackground">
      <bool>true</bool>
     </property>
     <property name="title">
-     <string>Gauss sigma</string>
+     <string>Non-maxima suppression window</string>
     </property>
-    <widget class="QRadioButton" name="radSigma7">
+    <widget class="QRadioButton" name="radN1">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -151,13 +151,26 @@
       </rect>
      </property>
      <property name="text">
-      <string>0.7</string>
+      <string>2 x 2</string>
      </property>
      <property name="checked">
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QRadioButton" name="radSigma14">
+    <widget class="QRadioButton" name="radN3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>4 x 4</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radN2">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -167,7 +180,20 @@
       </rect>
      </property>
      <property name="text">
-      <string>1.4</string>
+      <string>3 x 3</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radN4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>5 x 5</string>
      </property>
     </widget>
    </widget>

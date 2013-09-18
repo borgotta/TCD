@@ -35,7 +35,10 @@ HarrisForm::HarrisForm(QWidget *parent)
 	QObject::connect(ui.removeButton, SIGNAL(clicked()), this, SLOT(removeItem()));
 	QObject::connect(ui.fileListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(updateImage()));
 	QObject::connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(drawPoints()));
-	QObject::connect(ui.radSigma7, SIGNAL(toggled(bool)), this, SLOT(drawProcessed()));
+	QObject::connect(ui.radN1, SIGNAL(clicked()), this, SLOT(drawPoints()));
+	QObject::connect(ui.radN2, SIGNAL(clicked()), this, SLOT(drawPoints()));
+	QObject::connect(ui.radN3, SIGNAL(clicked()), this, SLOT(drawPoints()));
+	QObject::connect(ui.radN4, SIGNAL(clicked()), this, SLOT(drawPoints()));
 	//QObject::connect(ui.goButton, SIGNAL(clicked()), this, SLOT(processImages()));
 
 
@@ -95,11 +98,7 @@ void HarrisForm::updateImage() {
 };
 void HarrisForm::drawProcessed() {
 	
-	if (ui.radSigma7->isChecked()) {
-		m_image->runHarris(0.7);
-	} else {
-		m_image->runHarris(1.4);
-	}
+	m_image->runHarris();
 	drawPoints();
 
 }
@@ -111,9 +110,17 @@ void HarrisForm::drawPoints() {
 		normalize(response, response, 0, 255, NORM_MINMAX, CV_8UC1);
 		labelResponse->setPixmap(QPixmap::fromImage(Mat2QImageGrey(response)));
 		labelResponse->adjustSize();
-
-		//cvtColor(m_image, circles, CV_BGR2GRAY);
-		vector<Point2i> points = m_image->getCorners(ui.horizontalSlider->value());
+		int wind_n = 1;
+		if (ui.radN1->isChecked()) {
+			wind_n = 1;
+		} else if (ui.radN2->isChecked()) {
+			wind_n = 2;
+		} else if (ui.radN3->isChecked()) {
+			wind_n = 3;
+		} else if (ui.radN4->isChecked()) {
+			wind_n = 4;
+		}
+		vector<Point2i> points = m_image->getCorners(ui.horizontalSlider->value(), wind_n);
 		//harris.getCorners(points);//ui.horizontalSlider->value());
 		cvtColor(gradient, gradient, CV_GRAY2RGB);
 		for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {

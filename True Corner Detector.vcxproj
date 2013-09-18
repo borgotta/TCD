@@ -125,6 +125,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="fornster_detector.h" />
     <ClInclude Include="GeneratedFiles\ui_susan_form.h" />
     <ClInclude Include="harris_detector.h" />
     <ClInclude Include="Image.h" />

@@ -53,7 +53,7 @@ Mat TCD::Image::getGrayscale() {
 	}
 }
 
-vector<Point2i> TCD::Image::getCorners(float threshold) {
-	harris.getCorners(corners, threshold);
+vector<Point2i> TCD::Image::getCorners(float threshold, int wind_n) {
+	harris.getCorners(corners, threshold, wind_n);
 	return corners;
 }
