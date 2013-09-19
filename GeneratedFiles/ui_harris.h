@@ -13,6 +13,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
@@ -36,7 +37,6 @@ class Ui_HarrisForm
 public:
     QAction *actionExit;
     QWidget *centralWidget;
-    QPushButton *goButton;
     QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout;
     QPushButton *addButton;
@@ -52,6 +52,7 @@ public:
     QRadioButton *radN3;
     QRadioButton *radN2;
     QRadioButton *radN4;
+    QDoubleSpinBox *spinBoxK;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuHelp;
@@ -66,9 +67,6 @@ public:
         actionExit->setObjectName(QStringLiteral("actionExit"));
         centralWidget = new QWidget(HarrisForm);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        goButton = new QPushButton(centralWidget);
-        goButton->setObjectName(QStringLiteral("goButton"));
-        goButton->setGeometry(QRect(40, 470, 141, 31));
         layoutWidget = new QWidget(centralWidget);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
         layoutWidget->setGeometry(QRect(20, 280, 182, 25));
@@ -132,6 +130,13 @@ public:
         radN4 = new QRadioButton(gboxWindow);
         radN4->setObjectName(QStringLiteral("radN4"));
         radN4->setGeometry(QRect(10, 80, 82, 17));
+        spinBoxK = new QDoubleSpinBox(centralWidget);
+        spinBoxK->setObjectName(QStringLiteral("spinBoxK"));
+        spinBoxK->setGeometry(QRect(30, 470, 62, 22));
+        spinBoxK->setMinimum(0.01);
+        spinBoxK->setMaximum(0.8);
+        spinBoxK->setSingleStep(0.01);
+        spinBoxK->setValue(0.4);
         HarrisForm->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(HarrisForm);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -144,8 +149,7 @@ public:
         statusBar = new QStatusBar(HarrisForm);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         HarrisForm->setStatusBar(statusBar);
-        QWidget::setTabOrder(addButton, goButton);
-        QWidget::setTabOrder(goButton, removeButton);
+        QWidget::setTabOrder(addButton, removeButton);
         QWidget::setTabOrder(removeButton, fileListWidget);
 
         menuBar->addAction(menuFile->menuAction());
@@ -167,7 +171,6 @@ public:
     {
         HarrisForm->setWindowTitle(QApplication::translate("HarrisForm", "Harris Corner Detector", 0));
         actionExit->setText(QApplication::translate("HarrisForm", "Exit", 0));
-        goButton->setText(QApplication::translate("HarrisForm", "Save results", 0));
         addButton->setText(QApplication::translate("HarrisForm", "Add", 0));
         removeButton->setText(QApplication::translate("HarrisForm", "Remove", 0));
         gboxWindow->setTitle(QApplication::translate("HarrisForm", "Non-maxima suppression window", 0));

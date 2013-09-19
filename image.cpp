@@ -22,7 +22,7 @@ string Image::getFilename() {
 bool Image::isHarrisDone() {
 	return harrisDone;
 }
-void Image::runHarris(float sigma) {
+void Image::runHarris(float sigma, float k) {
 	Mat m_image; //grayscale
 	try {
 		m_image = imread(filename);
@@ -33,7 +33,7 @@ void Image::runHarris(float sigma) {
 		return;
 	}
 	try {
-		harris.init(m_image, sigma);
+		harris.init(m_image, sigma, k);
 		m_response = harris.getResponse();
 		//harris.getCorners(corners, threshold);
 	} catch(...) {

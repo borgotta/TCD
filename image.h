@@ -20,7 +20,7 @@ namespace TCD {
 	public:
 		Image(QListWidget *view, std::string filename);
 		~Image(void);
-		void runHarris(float sigma = 0.7);
+		void runHarris(float sigma = 0.7, float k = 0.4);
 		bool isHarrisDone(void);
 		std::string getFilename(void);
 		std::vector<cv::Point2i> getCorners(float threshold = 0.0, int wind_n = 2);

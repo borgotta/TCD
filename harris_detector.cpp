@@ -1,5 +1,6 @@
 #include "harris_detector.h"
 #include "util.h"
+#include <limits>
 
 using namespace std;
 using namespace cv;
@@ -7,8 +8,8 @@ using namespace cv;
 
 HarrisDetector::HarrisDetector() {}
 HarrisDetector::~HarrisDetector() {}
-void HarrisDetector::init(Mat image, float sigma) {
-
+void HarrisDetector::init(Mat image, float sigma, float k) {
+	//GaussianBlur(image, m_image, Size(3,3), 0);
 	image.convertTo(m_image, CV_32F);
 	// initialize the output matrix with zeros
 	//Mat new_image = Mat::zeros( image.size(), image.type() );
@@ -18,6 +19,7 @@ void HarrisDetector::init(Mat image, float sigma) {
 	//subtract(sub_mat, image, new_image);
 	//new_image.convertTo(m_image, CV_32F);
 
+	m_k = k;
 	m_height = m_image.rows;
 	m_width = m_image.cols;
 	m_sigmaD = sigma;
@@ -86,16 +88,19 @@ void HarrisDetector::preprocess2() {
   
   //----------------------------------------------------------------------
   // m_dIdxdIdx
+	GaussianBlur(m_dIdxdIdx, m_dIdxdIdx, Size(3,3), 0);
   //convolveX(m_dIdxdIdx, m_gaussI, m_dIdxdIdx);
   //convolveY(m_dIdxdIdx, m_gaussI, m_dIdxdIdx);
   
   //----------------------------------------------------------------------
   // m_dIdydIdy
+	GaussianBlur(m_dIdydIdy, m_dIdydIdy, Size(3,3), 0);
   //convolveX(m_dIdydIdy, m_gaussI, m_dIdydIdy);
   //convolveY(m_dIdydIdy, m_gaussI, m_dIdydIdy);
   
   //----------------------------------------------------------------------
   // m_dIdxdIdy
+	GaussianBlur(m_dIdxdIdy, m_dIdxdIdy, Size(3,3), 0);
   //convolveX(m_dIdxdIdy, m_gaussI, m_dIdxdIdy);
   //convolveY(m_dIdxdIdy, m_gaussI, m_dIdxdIdy);
 }
@@ -107,6 +112,8 @@ Mat HarrisDetector::getResponse() {
 void HarrisDetector::setResponse() {
 	m_response = Mat::zeros(m_height, m_width, CV_32F);
 	float *pm_response = m_response.ptr<float>();
+	float min = numeric_limits<float>::max();
+	float max = numeric_limits<float>::lowest();
 	for (int y = 0; y < m_height; ++y) {
 		for (int x = 0; x < m_width; ++x) {
 			//const float dIdxdIdx = m_dIdxdIdx.at<float>(y,x);
@@ -115,20 +122,24 @@ void HarrisDetector::setResponse() {
 			//if (dIdydIdy != 0.0) cout<<"dIdydIdy("<<y<<","<<x<<") = "<<dIdydIdy<<endl;
 			const float D = m_dIdxdIdx.at<float>(y,x) * m_dIdydIdy.at<float>(y,x) - m_dIdxdIdy.at<float>(y,x) * m_dIdxdIdy.at<float>(y,x);
 			const float tr = m_dIdxdIdx.at<float>(y,x) + m_dIdydIdy.at<float>(y,x);
-			pm_response[y*m_width + x] = -(D - 0.4 * tr * tr);
+			const float response = (D - m_k * tr * tr);
+			if (min > response) min = response;
+			if (max < response) max = response;
+			pm_response[y*m_width + x] = response;
 		}
 	}
+	cout<<"max="<<max<<", min="<<min<<" "<< endl;
 }
 void HarrisDetector::getCorners(vector<Point2i> &dst, float threshold, int wind_n) {
 
 	dst.clear();
 	Mat temp; 
 	nonMaximaSuppresion(m_response, wind_n, temp);
-	normalize(temp,temp,0,255,NORM_MINMAX,CV_8U);
+	//normalize(temp,temp,0,255,NORM_L1,CV_8U);
 	dst = vector<Point2i>();
 	for (int y = 0; y < m_height; y++) {
 		for (int x = 0; x < m_width; x++) {
-			if (temp.at<uchar>(y,x) > 0.0 && temp.at<uchar>(y,x) > threshold) {
+			if (temp.at<float>(y,x) > 0.0 && temp.at<float>(y,x) > threshold) {
 				dst.push_back(Point2i(x,y));
 			}
 		}
