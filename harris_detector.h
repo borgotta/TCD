@@ -1,39 +1,21 @@
 #pragma once
 
+#include "detector.h"
 #include <opencv2\core\core.hpp>
 #include <set>
 
-class HarrisDetector {
+class HarrisDetector : public TCD::Detector {
 
 public:
 	HarrisDetector();
 	~HarrisDetector();
 
-
-	void init(cv::Mat image, float sigma = 1.0, float k = 0.4);
 	cv::Mat getResponse();
-	void getCorners(std::vector<cv::Point2i> &dst, float threshold = 0.0, int n = 2);
+	void init(cv::Mat image, float sigma = 1.0, float k = 0.4);
+	std::vector<cv::Point2i> getCorners(float threshold = 0.0, int n = 2);
 
 private:
-	int m_height;
-	int m_width;
-	float m_sigmaD;
-	float m_sigmaI;
 	float m_k;
-
-	cv::Mat m_image;
-
-	std::vector<float> m_gaussD;
-	std::vector<float> m_gaussI;
-
-	//std::vector<std::vector<float> > m_dIdx;
-	//std::vector<std::vector<float> > m_dIdy;
-
-	//std::vector<std::vector<float> > m_dIdxdIdx;
-	//std::vector<std::vector<float> > m_dIdydIdy;
-	//std::vector<std::vector<float> > m_dIdxdIdy;
-
-	//std::vector<std::vector<float> > m_response;
 	
 	cv::Mat m_dIdx;
 	cv::Mat m_dIdy;
@@ -41,7 +23,7 @@ private:
 	cv::Mat m_dIdxdIdx;
 	cv::Mat m_dIdydIdy;
 	cv::Mat m_dIdxdIdy;
-
+	
 	cv::Mat m_response;
 
 	void setDerivatives();

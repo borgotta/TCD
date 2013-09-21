@@ -10,14 +10,8 @@ HarrisDetector::HarrisDetector() {}
 HarrisDetector::~HarrisDetector() {}
 void HarrisDetector::init(Mat image, float sigma, float k) {
 	//GaussianBlur(image, m_image, Size(3,3), 0);
+	done = false;
 	image.convertTo(m_image, CV_32F);
-	// initialize the output matrix with zeros
-	//Mat new_image = Mat::zeros( image.size(), image.type() );
- //
-	//// create a matrix with all elements equal to 255 for subtraction
-	//Mat sub_mat = Mat::ones(image.size(), image.type())*255;
-	//subtract(sub_mat, image, new_image);
-	//new_image.convertTo(m_image, CV_32F);
 
 	m_k = k;
 	m_height = m_image.rows;
@@ -28,6 +22,7 @@ void HarrisDetector::init(Mat image, float sigma, float k) {
 	setGaussI(m_sigmaI, m_gaussI); 
 	setDerivatives();
 	setResponse();
+	done = true;
 }
 
 void HarrisDetector::setDerivatives() {
@@ -38,6 +33,7 @@ void HarrisDetector::setDerivatives() {
 void HarrisDetector::preprocess() {
 	//GaussianBlur(m_image, m_dIdx, Size(5,5), 0);
 	m_image.copyTo(m_dIdx);
+	m_image.copyTo(m_dIdy);
 	//m_dIdx = m_image.clone();
 	//m_dIdx = m_image;
 
@@ -53,7 +49,7 @@ void HarrisDetector::preprocess() {
 
 	//m_dIdy = m_image.clone();
 	//GaussianBlur(m_image, m_dIdy, Size(5,5), 1);
-	m_image.copyTo(m_dIdy);
+	
 	//m_dIdy = m_image;
 
 	//convolveX(m_dIdy, ifilter, m_dIdy);
@@ -105,10 +101,6 @@ void HarrisDetector::preprocess2() {
   //convolveY(m_dIdxdIdy, m_gaussI, m_dIdxdIdy);
 }
 
-Mat HarrisDetector::getResponse() {
-	return m_response;
-}
-
 void HarrisDetector::setResponse() {
 	m_response = Mat::zeros(m_height, m_width, CV_32F);
 	float *pm_response = m_response.ptr<float>();
@@ -130,13 +122,12 @@ void HarrisDetector::setResponse() {
 	}
 	cout<<"max="<<max<<", min="<<min<<" "<< endl;
 }
-void HarrisDetector::getCorners(vector<Point2i> &dst, float threshold, int wind_n) {
 
-	dst.clear();
+vector<Point2i> HarrisDetector::getCorners(float threshold, int wind_n) {
+	vector<Point2i> dst = vector<Point2i>();
 	Mat temp; 
 	nonMaximaSuppresion(m_response, wind_n, temp);
 	//normalize(temp,temp,0,255,NORM_L1,CV_8U);
-	dst = vector<Point2i>();
 	for (int y = 0; y < m_height; y++) {
 		for (int x = 0; x < m_width; x++) {
 			if (temp.at<float>(y,x) > 0.0 && temp.at<float>(y,x) > threshold) {
@@ -145,4 +136,9 @@ void HarrisDetector::getCorners(vector<Point2i> &dst, float threshold, int wind_
 		}
 	}
 	cout<<"Dst size = "<<dst.size()<<"\n";
-}	
+	return dst;
+}
+
+Mat HarrisDetector::getResponse() {
+	return m_response.clone();
+}

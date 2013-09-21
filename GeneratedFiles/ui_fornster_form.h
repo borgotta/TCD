@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'harris.ui'
+** Form generated from reading UI file 'fornster_form.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.1.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef UI_HARRIS_H
-#define UI_HARRIS_H
+#ifndef UI_FORNSTER_FORM_H
+#define UI_FORNSTER_FORM_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
@@ -32,7 +32,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_HarrisForm
+class Ui_FornsterForm
 {
 public:
     QAction *actionExit;
@@ -52,20 +52,21 @@ public:
     QRadioButton *radN3;
     QRadioButton *radN2;
     QRadioButton *radN4;
-    QDoubleSpinBox *spinBoxK;
+    QDoubleSpinBox *spinBoxW;
+    QDoubleSpinBox *spinBoxQ;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuHelp;
     QStatusBar *statusBar;
 
-    void setupUi(QMainWindow *HarrisForm)
+    void setupUi(QMainWindow *FornsterForm)
     {
-        if (HarrisForm->objectName().isEmpty())
-            HarrisForm->setObjectName(QStringLiteral("HarrisForm"));
-        HarrisForm->resize(867, 545);
-        actionExit = new QAction(HarrisForm);
+        if (FornsterForm->objectName().isEmpty())
+            FornsterForm->setObjectName(QStringLiteral("FornsterForm"));
+        FornsterForm->resize(867, 545);
+        actionExit = new QAction(FornsterForm);
         actionExit->setObjectName(QStringLiteral("actionExit"));
-        centralWidget = new QWidget(HarrisForm);
+        centralWidget = new QWidget(FornsterForm);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         layoutWidget = new QWidget(centralWidget);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
@@ -130,25 +131,30 @@ public:
         radN4 = new QRadioButton(gboxWindow);
         radN4->setObjectName(QStringLiteral("radN4"));
         radN4->setGeometry(QRect(10, 80, 82, 17));
-        spinBoxK = new QDoubleSpinBox(centralWidget);
-        spinBoxK->setObjectName(QStringLiteral("spinBoxK"));
-        spinBoxK->setGeometry(QRect(30, 470, 62, 22));
-        spinBoxK->setMinimum(0.01);
-        spinBoxK->setMaximum(0.8);
-        spinBoxK->setSingleStep(0.01);
-        spinBoxK->setValue(0.23);
-        HarrisForm->setCentralWidget(centralWidget);
-        menuBar = new QMenuBar(HarrisForm);
+        spinBoxW = new QDoubleSpinBox(centralWidget);
+        spinBoxW->setObjectName(QStringLiteral("spinBoxW"));
+        spinBoxW->setGeometry(QRect(30, 470, 62, 22));
+        spinBoxW->setMinimum(0.05);
+        spinBoxW->setMaximum(1.5);
+        spinBoxW->setSingleStep(0.01);
+        spinBoxW->setValue(0.5);
+        spinBoxQ = new QDoubleSpinBox(centralWidget);
+        spinBoxQ->setObjectName(QStringLiteral("spinBoxQ"));
+        spinBoxQ->setGeometry(QRect(120, 470, 62, 22));
+        spinBoxQ->setMinimum(0.5);
+        spinBoxQ->setMaximum(0.75);
+        FornsterForm->setCentralWidget(centralWidget);
+        menuBar = new QMenuBar(FornsterForm);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 867, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuHelp = new QMenu(menuBar);
         menuHelp->setObjectName(QStringLiteral("menuHelp"));
-        HarrisForm->setMenuBar(menuBar);
-        statusBar = new QStatusBar(HarrisForm);
+        FornsterForm->setMenuBar(menuBar);
+        statusBar = new QStatusBar(FornsterForm);
         statusBar->setObjectName(QStringLiteral("statusBar"));
-        HarrisForm->setStatusBar(statusBar);
+        FornsterForm->setStatusBar(statusBar);
         QWidget::setTabOrder(addButton, removeButton);
         QWidget::setTabOrder(removeButton, fileListWidget);
 
@@ -156,38 +162,37 @@ public:
         menuBar->addAction(menuHelp->menuAction());
         menuFile->addAction(actionExit);
 
-        retranslateUi(HarrisForm);
-        QObject::connect(actionExit, SIGNAL(triggered()), HarrisForm, SLOT(close()));
+        retranslateUi(FornsterForm);
         QObject::connect(horizontalSlider, SIGNAL(valueChanged(int)), spinBox, SLOT(setValue(int)));
         QObject::connect(spinBox, SIGNAL(valueChanged(int)), horizontalSlider, SLOT(setValue(int)));
 
         viewTabs->setCurrentIndex(-1);
 
 
-        QMetaObject::connectSlotsByName(HarrisForm);
+        QMetaObject::connectSlotsByName(FornsterForm);
     } // setupUi
 
-    void retranslateUi(QMainWindow *HarrisForm)
+    void retranslateUi(QMainWindow *FornsterForm)
     {
-        HarrisForm->setWindowTitle(QApplication::translate("HarrisForm", "Harris Corner Detector", 0));
-        actionExit->setText(QApplication::translate("HarrisForm", "Exit", 0));
-        addButton->setText(QApplication::translate("HarrisForm", "Add", 0));
-        removeButton->setText(QApplication::translate("HarrisForm", "Remove", 0));
-        gboxWindow->setTitle(QApplication::translate("HarrisForm", "Non-maxima suppression window", 0));
-        radN1->setText(QApplication::translate("HarrisForm", "2 x 2", 0));
-        radN3->setText(QApplication::translate("HarrisForm", "4 x 4", 0));
-        radN2->setText(QApplication::translate("HarrisForm", "3 x 3", 0));
-        radN4->setText(QApplication::translate("HarrisForm", "5 x 5", 0));
-        menuFile->setTitle(QApplication::translate("HarrisForm", "File", 0));
-        menuHelp->setTitle(QApplication::translate("HarrisForm", "Help", 0));
+        FornsterForm->setWindowTitle(QApplication::translate("FornsterForm", "Fornster Corner Detector", 0));
+        actionExit->setText(QApplication::translate("FornsterForm", "Exit", 0));
+        addButton->setText(QApplication::translate("FornsterForm", "Add", 0));
+        removeButton->setText(QApplication::translate("FornsterForm", "Remove", 0));
+        gboxWindow->setTitle(QApplication::translate("FornsterForm", "Non-maxima suppression window", 0));
+        radN1->setText(QApplication::translate("FornsterForm", "2 x 2", 0));
+        radN3->setText(QApplication::translate("FornsterForm", "4 x 4", 0));
+        radN2->setText(QApplication::translate("FornsterForm", "3 x 3", 0));
+        radN4->setText(QApplication::translate("FornsterForm", "5 x 5", 0));
+        menuFile->setTitle(QApplication::translate("FornsterForm", "File", 0));
+        menuHelp->setTitle(QApplication::translate("FornsterForm", "Help", 0));
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class HarrisForm: public Ui_HarrisForm {};
+    class FornsterForm: public Ui_FornsterForm {};
 } // namespace Ui
 
 QT_END_NAMESPACE
 
-#endif // UI_HARRIS_H
+#endif // UI_FORNSTER_FORM_H

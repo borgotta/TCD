@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>HarrisForm</class>
- <widget class="QMainWindow" name="HarrisForm">
+ <class>FornsterForm</class>
+ <widget class="QMainWindow" name="FornsterForm">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Harris Corner Detector</string>
+   <string>Fornster Corner Detector</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QWidget" name="layoutWidget">
@@ -184,7 +184,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QDoubleSpinBox" name="spinBoxK">
+   <widget class="QDoubleSpinBox" name="spinBoxW">
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -194,16 +194,32 @@
      </rect>
     </property>
     <property name="minimum">
-     <double>0.010000000000000</double>
+     <double>0.050000000000000</double>
     </property>
     <property name="maximum">
-     <double>0.800000000000000</double>
+     <double>1.500000000000000</double>
     </property>
     <property name="singleStep">
      <double>0.010000000000000</double>
     </property>
     <property name="value">
-     <double>0.230000000000000</double>
+     <double>0.500000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="spinBoxQ">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>470</y>
+      <width>62</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <double>0.500000000000000</double>
+    </property>
+    <property name="maximum">
+     <double>0.750000000000000</double>
     </property>
    </widget>
   </widget>
@@ -247,22 +263,6 @@
   <include location="truecornerdetector.qrc"/>
  </resources>
  <connections>
-  <connection>
-   <sender>actionExit</sender>
-   <signal>triggered()</signal>
-   <receiver>HarrisForm</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>433</x>
-     <y>272</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>horizontalSlider</sender>
    <signal>valueChanged(int)</signal>

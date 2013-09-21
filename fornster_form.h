@@ -2,13 +2,11 @@
 
 #include <QtWidgets/QMainWindow>
 #include <qlabel.h>
-#include "ui_harris.h"
-#include "harris_detector.h"
+#include "ui_fornster_form.h"
 #include <list>
-#include <opencv2\core\core.hpp>
 #include "image.h"
 
-class HarrisForm : public QMainWindow
+class FornsterForm : public QMainWindow
 {
 	Q_OBJECT
 
@@ -22,16 +20,16 @@ private slots:
 	void processImages();
 
 public:
-	HarrisForm(QWidget *parent = 0);
-	~HarrisForm();
+	FornsterForm(QWidget *parent = 0);
+	~FornsterForm();
 
 private:
-	Ui::HarrisForm ui;
-	//HarrisDetector harris;
+	Ui::FornsterForm ui;
 	std::list<std::string> files;
 	std::vector<TCD::Image*> images;
 	QLabel *labelOriginal;
-	QLabel *labelResponse;
+	QLabel *labelResponseW;
+	QLabel *labelResponseQ;
 	QLabel *labelCorners;
 	QImage image;
 	TCD::Image *m_image;

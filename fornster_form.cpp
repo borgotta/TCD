@@ -1,4 +1,4 @@
-#include "harris_form.h"
+#include "fornster_form.h"
 #include "util.h"
 #include <qfiledialog.h>
 #include <QMessageBox>
@@ -9,7 +9,7 @@
 using namespace std;
 using namespace cv;
 
-HarrisForm::HarrisForm(QWidget *parent)
+FornsterForm::FornsterForm(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
@@ -22,15 +22,18 @@ HarrisForm::HarrisForm(QWidget *parent)
 	//ui.labelOriginal->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 	labelCorners = new QLabel;
 	labelOriginal = new QLabel;
-	labelResponse = new QLabel;
+	labelResponseQ = new QLabel;
+	labelResponseW = new QLabel;
 
 	labelOriginal->setScaledContents(true);
 	labelCorners->setScaledContents(true);
-	labelResponse->setScaledContents(true);
+	labelResponseQ->setScaledContents(true);
+	labelResponseW->setScaledContents(true);
 
 	ui.viewTabs->addTab(labelOriginal, "Original");
 	ui.viewTabs->addTab(labelCorners, "Corners");
-	ui.viewTabs->addTab(labelResponse, "Response");
+	ui.viewTabs->addTab(labelResponseW, "Response w");
+	ui.viewTabs->addTab(labelResponseQ, "Response q");
 
 	//slots connection
 	QObject::connect(ui.addButton, SIGNAL(clicked()), this, SLOT(addImages()));
@@ -41,18 +44,19 @@ HarrisForm::HarrisForm(QWidget *parent)
 	QObject::connect(ui.radN2, SIGNAL(clicked()), this, SLOT(drawPoints()));
 	QObject::connect(ui.radN3, SIGNAL(clicked()), this, SLOT(drawPoints()));
 	QObject::connect(ui.radN4, SIGNAL(clicked()), this, SLOT(drawPoints()));
-	QObject::connect(ui.spinBoxK, SIGNAL(valueChanged(double)), this, SLOT(drawProcessed()));
+	QObject::connect(ui.spinBoxQ, SIGNAL(valueChanged(double)), this, SLOT(drawPoints()));
+	QObject::connect(ui.spinBoxW, SIGNAL(valueChanged(double)), this, SLOT(drawPoints()));
 	//QObject::connect(ui.goButton, SIGNAL(clicked()), this, SLOT(processImages()));
 	files.clear();
 
 }
 
-HarrisForm::~HarrisForm()
+FornsterForm::~FornsterForm()
 {
 
 }
 
-void HarrisForm::addImages() {
+void FornsterForm::addImages() {
 	QStringList fileNames = QFileDialog::getOpenFileNames(this,
 		tr("Open Images"), "",
 		tr("Images (*.png *.jpg);;"
@@ -72,7 +76,7 @@ void HarrisForm::addImages() {
 	//update();
 }
 
-void HarrisForm::updateImage() {
+void FornsterForm::updateImage() {
 	try { if (ui.fileListWidget->currentIndex().row() != -1) {
 		m_image = (TCD::Image*)ui.fileListWidget->currentItem();
 		QString fileName = QString::fromLocal8Bit(m_image->getFilename().data());//ui.fileListWidget->currentItem()->text();
@@ -97,19 +101,23 @@ void HarrisForm::updateImage() {
 		throw;
 	}
 };
-void HarrisForm::drawProcessed() {
-	m_image->harris.init(m_image->getGrayscale(),1, (float)ui.spinBoxK->value());
+void FornsterForm::drawProcessed() {
+	m_image->fornster.init(m_image->getGrayscale());
 	drawPoints();
 
 }
 
-void HarrisForm::drawPoints() {
-	if (m_image != NULL && m_image->harris.isDone()) {
+void FornsterForm::drawPoints() {
+	if (m_image != NULL && m_image->fornster.isDone()) {
 		Mat gradient = m_image->getGrayscale();
-		Mat response = m_image->harris.getResponse();
-		normalize(response, response, 0, 255, NORM_MINMAX, CV_8UC1);
-		labelResponse->setPixmap(QPixmap::fromImage(Mat2QImageGrey(response)));
-		labelResponse->adjustSize();
+		Mat responseQ = m_image->fornster.getResponseQ();
+		Mat responseW = m_image->fornster.getResponseW();
+		normalize(responseQ, responseQ, 0, 255, NORM_MINMAX, CV_8UC1);
+		normalize(responseW, responseW, 0, 255, NORM_MINMAX, CV_8UC1);
+		labelResponseQ->setPixmap(QPixmap::fromImage(Mat2QImageGrey(responseQ)));
+		labelResponseQ->adjustSize();
+		labelResponseW->setPixmap(QPixmap::fromImage(Mat2QImageGrey(responseW)));
+		labelResponseW->adjustSize();
 		int wind_n = 1;
 		if (ui.radN1->isChecked()) {
 			wind_n = 1;
@@ -120,7 +128,7 @@ void HarrisForm::drawPoints() {
 		} else if (ui.radN4->isChecked()) {
 			wind_n = 4;
 		}
-		vector<Point2i> points = m_image->harris.getCorners(ui.horizontalSlider->value(), wind_n);
+		vector<Point2i> points = m_image->fornster.getCorners(ui.spinBoxW->value(), ui.spinBoxQ->value());
 		//harris.getCorners(points);//ui.horizontalSlider->value());
 		cvtColor(gradient, gradient, CV_GRAY2RGB);
 		for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {
@@ -132,7 +140,7 @@ void HarrisForm::drawPoints() {
 
 	}
 }
-void HarrisForm::update() {
+void FornsterForm::update() {
 	ui.fileListWidget->clear();
 
 	for (list<string>::iterator it = files.begin(); it!=files.end(); it++) {
@@ -140,7 +148,7 @@ void HarrisForm::update() {
 	}
 }
 
-void HarrisForm::removeItem() {
+void FornsterForm::removeItem() {
 	if (ui.fileListWidget->currentIndex().row() != -1) {
 		try {
 			files.remove(ui.fileListWidget->currentItem()->text().toLocal8Bit().constData());
@@ -154,7 +162,7 @@ void HarrisForm::removeItem() {
 	}
 }
 
-void HarrisForm::processImages() {
+void FornsterForm::processImages() {
 	if (files.size() != 0) {
 		
 
