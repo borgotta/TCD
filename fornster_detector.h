@@ -8,8 +8,8 @@ class FornsterDetector : public TCD::Detector {
 public:
 	FornsterDetector();
 	virtual ~FornsterDetector(){}
-	std::vector<cv::Point2i> getCorners(float w = 0.5, float q = 0.5);
-	void init(cv::Mat image);
+	std::vector<cv::Point2i> getCorners(float w = 0.5, float q = 0.5, int wind_n = 3);
+	void init(cv::Mat image, float sigma = 0.7);
 	cv::Mat getResponseW();
 	cv::Mat getResponseQ();
 

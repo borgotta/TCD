@@ -18,6 +18,10 @@ private slots:
 	void removeItem();
 	void update();
 	void processImages();
+	void slider2spinboxW(int value);
+	void slider2spinboxQ(int value);
+	void spinbox2sliderW(double value);
+	void spinbox2sliderQ(double value);
 
 public:
 	FornsterForm(QWidget *parent = 0);

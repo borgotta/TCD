@@ -17,6 +17,7 @@
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
@@ -24,7 +25,6 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSlider>
-#include <QtWidgets/QSpinBox>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QVBoxLayout>
@@ -45,15 +45,16 @@ public:
     QVBoxLayout *verticalLayout;
     QTabWidget *viewTabs;
     QListWidget *fileListWidget;
-    QSlider *horizontalSlider;
-    QSpinBox *spinBox;
     QGroupBox *gboxWindow;
     QRadioButton *radN1;
     QRadioButton *radN3;
     QRadioButton *radN2;
-    QRadioButton *radN4;
     QDoubleSpinBox *spinBoxW;
     QDoubleSpinBox *spinBoxQ;
+    QSlider *sliderW;
+    QSlider *sliderQ;
+    QLabel *label;
+    QLabel *label_2;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuHelp;
@@ -105,44 +106,55 @@ public:
         fileListWidget->setDragEnabled(false);
         fileListWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
         fileListWidget->setTextElideMode(Qt::ElideRight);
-        horizontalSlider = new QSlider(centralWidget);
-        horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
-        horizontalSlider->setGeometry(QRect(20, 330, 141, 22));
-        horizontalSlider->setMaximum(2000);
-        horizontalSlider->setOrientation(Qt::Horizontal);
-        spinBox = new QSpinBox(centralWidget);
-        spinBox->setObjectName(QStringLiteral("spinBox"));
-        spinBox->setGeometry(QRect(170, 330, 51, 22));
-        spinBox->setMaximum(2000);
         gboxWindow = new QGroupBox(centralWidget);
         gboxWindow->setObjectName(QStringLiteral("gboxWindow"));
-        gboxWindow->setGeometry(QRect(20, 360, 171, 101));
+        gboxWindow->setGeometry(QRect(10, 410, 171, 81));
         gboxWindow->setAutoFillBackground(true);
         radN1 = new QRadioButton(gboxWindow);
         radN1->setObjectName(QStringLiteral("radN1"));
         radN1->setGeometry(QRect(10, 20, 82, 17));
-        radN1->setChecked(true);
+        radN1->setChecked(false);
         radN3 = new QRadioButton(gboxWindow);
         radN3->setObjectName(QStringLiteral("radN3"));
         radN3->setGeometry(QRect(10, 60, 82, 17));
         radN2 = new QRadioButton(gboxWindow);
         radN2->setObjectName(QStringLiteral("radN2"));
         radN2->setGeometry(QRect(10, 40, 82, 17));
-        radN4 = new QRadioButton(gboxWindow);
-        radN4->setObjectName(QStringLiteral("radN4"));
-        radN4->setGeometry(QRect(10, 80, 82, 17));
+        radN2->setChecked(true);
         spinBoxW = new QDoubleSpinBox(centralWidget);
         spinBoxW->setObjectName(QStringLiteral("spinBoxW"));
-        spinBoxW->setGeometry(QRect(30, 470, 62, 22));
+        spinBoxW->setGeometry(QRect(150, 360, 62, 22));
         spinBoxW->setMinimum(0.05);
         spinBoxW->setMaximum(1.5);
         spinBoxW->setSingleStep(0.01);
-        spinBoxW->setValue(0.5);
+        spinBoxW->setValue(0.73);
         spinBoxQ = new QDoubleSpinBox(centralWidget);
         spinBoxQ->setObjectName(QStringLiteral("spinBoxQ"));
-        spinBoxQ->setGeometry(QRect(120, 470, 62, 22));
+        spinBoxQ->setGeometry(QRect(150, 320, 62, 22));
         spinBoxQ->setMinimum(0.5);
         spinBoxQ->setMaximum(0.75);
+        spinBoxQ->setSingleStep(0.01);
+        spinBoxQ->setValue(0.54);
+        sliderW = new QSlider(centralWidget);
+        sliderW->setObjectName(QStringLiteral("sliderW"));
+        sliderW->setGeometry(QRect(10, 360, 131, 22));
+        sliderW->setMinimum(50);
+        sliderW->setMaximum(150);
+        sliderW->setValue(73);
+        sliderW->setOrientation(Qt::Horizontal);
+        sliderQ = new QSlider(centralWidget);
+        sliderQ->setObjectName(QStringLiteral("sliderQ"));
+        sliderQ->setGeometry(QRect(10, 320, 131, 22));
+        sliderQ->setMinimum(50);
+        sliderQ->setMaximum(75);
+        sliderQ->setValue(54);
+        sliderQ->setOrientation(Qt::Horizontal);
+        label = new QLabel(centralWidget);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(220, 360, 16, 20));
+        label_2 = new QLabel(centralWidget);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setGeometry(QRect(220, 320, 16, 20));
         FornsterForm->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(FornsterForm);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -163,8 +175,6 @@ public:
         menuFile->addAction(actionExit);
 
         retranslateUi(FornsterForm);
-        QObject::connect(horizontalSlider, SIGNAL(valueChanged(int)), spinBox, SLOT(setValue(int)));
-        QObject::connect(spinBox, SIGNAL(valueChanged(int)), horizontalSlider, SLOT(setValue(int)));
 
         viewTabs->setCurrentIndex(-1);
 
@@ -179,10 +189,11 @@ public:
         addButton->setText(QApplication::translate("FornsterForm", "Add", 0));
         removeButton->setText(QApplication::translate("FornsterForm", "Remove", 0));
         gboxWindow->setTitle(QApplication::translate("FornsterForm", "Non-maxima suppression window", 0));
-        radN1->setText(QApplication::translate("FornsterForm", "2 x 2", 0));
-        radN3->setText(QApplication::translate("FornsterForm", "4 x 4", 0));
-        radN2->setText(QApplication::translate("FornsterForm", "3 x 3", 0));
-        radN4->setText(QApplication::translate("FornsterForm", "5 x 5", 0));
+        radN1->setText(QApplication::translate("FornsterForm", "0.5", 0));
+        radN3->setText(QApplication::translate("FornsterForm", "0.9", 0));
+        radN2->setText(QApplication::translate("FornsterForm", "0.7", 0));
+        label->setText(QApplication::translate("FornsterForm", "w", 0));
+        label_2->setText(QApplication::translate("FornsterForm", "q", 0));
         menuFile->setTitle(QApplication::translate("FornsterForm", "File", 0));
         menuHelp->setTitle(QApplication::translate("FornsterForm", "Help", 0));
     } // retranslateUi

@@ -6,10 +6,11 @@ using namespace cv;
 
 FornsterDetector::FornsterDetector() {};
 
-void FornsterDetector::init(Mat image) { 
+void FornsterDetector::init(Mat image, float sigma) { 
 	done = false;
 	image.convertTo(m_image, CV_32F);
 
+	m_sigmaI = sigma;
 	m_height = m_image.rows;
 	m_width = m_image.cols;
 	setDerivatives();
@@ -23,6 +24,7 @@ void FornsterDetector::setDerivatives() {
 }
 
 void FornsterDetector::preprocess() {
+	GaussianBlur(m_image, m_image, Size(0,0), m_sigmaI);
 	m_image.copyTo(m_dIdx);
 	m_image.copyTo(m_dIdy);
 
@@ -55,9 +57,9 @@ void FornsterDetector::preprocess2() {
 
 	//----------------------------------------------------------------------
 	// blur
-	GaussianBlur(m_dIdxdIdx, m_dIdxdIdx, Size(3,3), 0);
-	GaussianBlur(m_dIdydIdy, m_dIdydIdy, Size(3,3), 0);
-	GaussianBlur(m_dIdxdIdy, m_dIdxdIdy, Size(3,3), 0);
+	GaussianBlur(m_dIdxdIdx, m_dIdxdIdx, Size(0,0), m_sigmaI*m_sigmaI);
+	GaussianBlur(m_dIdydIdy, m_dIdydIdy, Size(0,0), m_sigmaI*m_sigmaI);
+	GaussianBlur(m_dIdxdIdy, m_dIdxdIdy, Size(0,0), m_sigmaI*m_sigmaI);
 }
 
 void FornsterDetector::setResponse() {
@@ -79,18 +81,23 @@ void FornsterDetector::setResponse() {
 			pm_wResponse[y*m_width + x] = w > 0.0 ? w : 0.0;
 			m_w += w / total;
 			const float q = tr == 0.0 ? 0.0 : (4 * w / tr);
-			if (q != 0.0) cout<<"q="<<q<<" ";
-			pm_qResponse[y*m_width + x] = q; // (4*D)/tr^2
+			//if (q != 0.0) cout<<"q="<<q<<" ";
+			pm_qResponse[y*m_width + x] = q >= 0.0 && q <= 1.0 ? q : 0.0; // (4*D)/tr^2
 		}
 	}
 }
 
-vector<Point2i> FornsterDetector::getCorners(float w, float q) {
+vector<Point2i> FornsterDetector::getCorners(float w, float q, int wind_n) {
 	vector<Point2i> dst = vector<Point2i>();
-	const float w_thresh = w * m_w;
+	const float w_thresh = w * m_w; 
+	Mat tempW, tempQ;
+	tempW = m_wResponse * (1.0/m_w);
+	tempQ = m_wResponse + m_qResponse;
+	//nonMaximaSuppresion(m_wResponse, wind_n, tempW);
+	nonMaximaSuppresion(tempQ, wind_n, tempW);
 	for (int y = 0; y < m_height; y++) {
 		for (int x = 0; x < m_width; x++) {
-			if (m_wResponse.at<float>(y,x) > w_thresh && m_qResponse.at<float>(y,x) > q) {
+			if (tempW.at<float>(y,x) >= (w+q) && m_wResponse.at<float>(y,x) >= w_thresh && m_qResponse.at<float>(y,x) >= q) {
 				dst.push_back(Point2i(x,y));
 			}
 		}

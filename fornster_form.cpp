@@ -39,11 +39,13 @@ FornsterForm::FornsterForm(QWidget *parent)
 	QObject::connect(ui.addButton, SIGNAL(clicked()), this, SLOT(addImages()));
 	QObject::connect(ui.removeButton, SIGNAL(clicked()), this, SLOT(removeItem()));
 	QObject::connect(ui.fileListWidget, SIGNAL(currentRowChanged(int)), this, SLOT(updateImage()));
-	QObject::connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(drawPoints()));
-	QObject::connect(ui.radN1, SIGNAL(clicked()), this, SLOT(drawPoints()));
-	QObject::connect(ui.radN2, SIGNAL(clicked()), this, SLOT(drawPoints()));
-	QObject::connect(ui.radN3, SIGNAL(clicked()), this, SLOT(drawPoints()));
-	QObject::connect(ui.radN4, SIGNAL(clicked()), this, SLOT(drawPoints()));
+	QObject::connect(ui.sliderW, SIGNAL(valueChanged(int)), this, SLOT(slider2spinboxW(int)));
+	QObject::connect(ui.sliderQ, SIGNAL(valueChanged(int)), this, SLOT(slider2spinboxQ(int)));
+	QObject::connect(ui.spinBoxW, SIGNAL(valueChanged(double)), this, SLOT(spinbox2sliderW(double)));
+	QObject::connect(ui.spinBoxQ, SIGNAL(valueChanged(double)), this, SLOT(spinbox2sliderQ(double)));
+	QObject::connect(ui.radN1, SIGNAL(clicked()), this, SLOT(drawProcessed()));
+	QObject::connect(ui.radN2, SIGNAL(clicked()), this, SLOT(drawProcessed()));
+	QObject::connect(ui.radN3, SIGNAL(clicked()), this, SLOT(drawProcessed()));
 	QObject::connect(ui.spinBoxQ, SIGNAL(valueChanged(double)), this, SLOT(drawPoints()));
 	QObject::connect(ui.spinBoxW, SIGNAL(valueChanged(double)), this, SLOT(drawPoints()));
 	//QObject::connect(ui.goButton, SIGNAL(clicked()), this, SLOT(processImages()));
@@ -102,7 +104,13 @@ void FornsterForm::updateImage() {
 	}
 };
 void FornsterForm::drawProcessed() {
-	m_image->fornster.init(m_image->getGrayscale());
+	if (ui.radN1->isChecked()) {
+		m_image->fornster.init(m_image->getGrayscale(), 0.5);
+	} else if (ui.radN2->isChecked()) {
+		m_image->fornster.init(m_image->getGrayscale(), 0.7);
+	} else if (ui.radN3->isChecked()) {
+		m_image->fornster.init(m_image->getGrayscale(), 0.9);
+	} 
 	drawPoints();
 
 }
@@ -125,14 +133,12 @@ void FornsterForm::drawPoints() {
 			wind_n = 2;
 		} else if (ui.radN3->isChecked()) {
 			wind_n = 3;
-		} else if (ui.radN4->isChecked()) {
-			wind_n = 4;
-		}
-		vector<Point2i> points = m_image->fornster.getCorners(ui.spinBoxW->value(), ui.spinBoxQ->value());
+		} 
+		vector<Point2i> points = m_image->fornster.getCorners(ui.spinBoxW->value(), ui.spinBoxQ->value(), 5);
 		//harris.getCorners(points);//ui.horizontalSlider->value());
 		cvtColor(gradient, gradient, CV_GRAY2RGB);
 		for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {
-			circle(gradient, *i, 1, Scalar(50,0,255), 2, 8, 0);
+			circle(gradient, *i, 1, Scalar(0,0,255), 2, 8, 0);
 		}
 
 		labelCorners->setPixmap(QPixmap::fromImage(Mat2QImageColor(gradient)));
@@ -171,4 +177,17 @@ void FornsterForm::processImages() {
 		msgBox.setText("No images to process!");
 		msgBox.exec();
 	}
+}
+
+void FornsterForm::slider2spinboxW(int value) {
+	ui.spinBoxW->setValue((double)value/100);
+}
+void FornsterForm::slider2spinboxQ(int value) {
+	ui.spinBoxQ->setValue((double)value/100);
+}
+void FornsterForm::spinbox2sliderW(double value) {
+	ui.sliderW->setValue((int)(value*100));
+}
+void FornsterForm::spinbox2sliderQ(double value) {
+	ui.sliderQ->setValue((int)(value*100));
 }
