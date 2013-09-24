@@ -3,6 +3,7 @@
 #include <opencv2\core\core.hpp>
 #include "harris_detector.h"
 #include "fornster_detector.h"
+#include "susan_detector.h"
 #include <qlistwidgetitem>
 #include <qlistwidget>
 
@@ -12,6 +13,7 @@ namespace TCD {
 	public: 
 		HarrisDetector harris;
 		FornsterDetector fornster;
+		SusanDetector susan;
 
 	private:
 		std::string filename;

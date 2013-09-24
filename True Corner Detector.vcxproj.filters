@@ -83,6 +83,18 @@
     <ClCompile Include="fornster_form.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="susan_detector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_susan_form.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_susan_form.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="susan_form.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="truecornerdetector.qrc">
@@ -97,9 +109,6 @@
     <CustomBuild Include="choice.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="susan_form.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="harris_form.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
@@ -109,15 +118,18 @@
     <CustomBuild Include="fornster_form.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="susan_form.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="susan_form.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_choice_form.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_harris.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_susan_form.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="harris_detector.h">
@@ -137,6 +149,12 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_fornster_form.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_susan_form.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="susan_detector.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

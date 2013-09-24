@@ -126,7 +126,7 @@ void HarrisDetector::setResponse() {
 vector<Point2i> HarrisDetector::getCorners(float threshold, int wind_n) {
 	vector<Point2i> dst = vector<Point2i>();
 	Mat temp; 
-	nonMaximaSuppresion(m_response, wind_n, temp);
+	nonMaximaSuppresionFloat(m_response, wind_n, temp);
 	//normalize(temp,temp,0,255,NORM_L1,CV_8U);
 	for (int y = 0; y < m_height; y++) {
 		for (int x = 0; x < m_width; x++) {

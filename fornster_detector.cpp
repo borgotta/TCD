@@ -93,8 +93,8 @@ vector<Point2i> FornsterDetector::getCorners(float w, float q, int wind_n) {
 	Mat tempW, tempQ;
 	tempW = m_wResponse * (1.0/m_w);
 	tempQ = m_wResponse + m_qResponse;
-	//nonMaximaSuppresion(m_wResponse, wind_n, tempW);
-	nonMaximaSuppresion(tempQ, wind_n, tempW);
+	//nonMaximaSuppresionFloat(m_wResponse, wind_n, tempW);
+	nonMaximaSuppresionFloat(tempQ, wind_n, tempW);
 	for (int y = 0; y < m_height; y++) {
 		for (int x = 0; x < m_width; x++) {
 			if (tempW.at<float>(y,x) >= (w+q) && m_wResponse.at<float>(y,x) >= w_thresh && m_qResponse.at<float>(y,x) >= q) {

@@ -185,7 +185,8 @@ Mat qimage2mat(const QImage& qimage) {
     cv::mixChannels( &mat, 1, &mat2, 1, from_to, 3 );
     return mat2;
 };
-void nonMaximaSuppresion(Mat &src, int n, Mat &dst) {
+
+void nonMaximaSuppresionFloat(Mat &src, int n, Mat &dst) {
 	const int height = src.rows;
 	const int width = src.cols;
 	int mi, mj;
@@ -215,6 +216,45 @@ void nonMaximaSuppresion(Mat &src, int n, Mat &dst) {
 				}
 			}
 			pdst[mi*width + mj] = src.at<float>(mi, mj);
+			failed: continue;
+		}
+	}
+	} catch(...) {
+		cout<<"("<<mi<<", "<<mj<<")"<<endl;
+		throw;
+	}
+}
+
+void nonMaximaSuppresionUchar(Mat &src, int n, Mat &dst) {
+	const int height = src.rows;
+	const int width = src.cols;
+	int mi, mj;
+	dst = Mat::zeros(height, width, CV_8U);
+	uchar *pdst = dst.ptr<uchar>();
+	try {
+	for (int i = n; i < height - n; i+=n+1) {
+		for (int j = n; j < width - n; j+=n+1) {
+			mi = i;
+			mj = j;
+			for (int i2 = i; i2 <= i+n; i2++) {
+				for (int j2 = j; j2 <= j+n; j2++) {
+					if (src.at<uchar>(i2,j2) > src.at<uchar>(mi,mj)) {
+						mi = i2;
+						mj = j2;
+					}
+				}
+			}
+			for (int i2 = mi - n; (i2 <= mi+n) && (i2 < height); i2++) {
+				for (int j2 = mj - n; (j2 <= mj+n) && (j2 < width); j2++) {
+					if (((i2 >= i) && (i2 <=(i+n))) && ((j2 >= j) && (j2 <= (j+n)))) {
+						continue;
+					}
+					if (src.at<uchar>(i2,j2) > src.at<uchar>(mi,mj)) {
+						goto failed;
+					}
+				}
+			}
+			pdst[mi*width + mj] = src.at<uchar>(mi, mj);
 			failed: continue;
 		}
 	}
