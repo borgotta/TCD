@@ -9,7 +9,7 @@
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	SusanForm w;
+	HarrisForm w;
 	w.show();
 	//SusanDetector s;
 	//cv::Mat img = cv::imread("images/logo.png");

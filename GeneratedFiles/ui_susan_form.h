@@ -20,8 +20,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSlider>
@@ -38,7 +37,7 @@ class Ui_SusanForm
 public:
     QAction *actionExit;
     QWidget *centralWidget;
-    QHBoxLayout *horizontalLayout_3;
+    QHBoxLayout *horizontalLayout_4;
     QWidget *widget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
@@ -57,10 +56,10 @@ public:
     QRadioButton *radN1;
     QRadioButton *radN3;
     QRadioButton *radN2;
+    QHBoxLayout *horizontalLayout_3;
+    QPushButton *saveButton;
+    QProgressBar *progressBar;
     QTabWidget *viewTabs;
-    QMenuBar *menuBar;
-    QMenu *menuFile;
-    QMenu *menuHelp;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *SusanForm)
@@ -68,14 +67,17 @@ public:
         if (SusanForm->objectName().isEmpty())
             SusanForm->setObjectName(QStringLiteral("SusanForm"));
         SusanForm->resize(903, 568);
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/icons/icon.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        SusanForm->setWindowIcon(icon);
         actionExit = new QAction(SusanForm);
         actionExit->setObjectName(QStringLiteral("actionExit"));
         centralWidget = new QWidget(SusanForm);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        horizontalLayout_3 = new QHBoxLayout(centralWidget);
-        horizontalLayout_3->setSpacing(6);
-        horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        horizontalLayout_4 = new QHBoxLayout(centralWidget);
+        horizontalLayout_4->setSpacing(6);
+        horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
         widget = new QWidget(centralWidget);
         widget->setObjectName(QStringLiteral("widget"));
         widget->setMaximumSize(QSize(281, 16777215));
@@ -130,7 +132,7 @@ public:
         sliderW->setMaximumSize(QSize(16777215, 22));
         sliderW->setMinimum(0);
         sliderW->setMaximum(99);
-        sliderW->setValue(0);
+        sliderW->setValue(2);
         sliderW->setOrientation(Qt::Horizontal);
 
         gridLayout->addWidget(sliderW, 1, 0, 1, 1);
@@ -156,6 +158,7 @@ public:
         spinBoxFinalT = new QSpinBox(widget);
         spinBoxFinalT->setObjectName(QStringLiteral("spinBoxFinalT"));
         spinBoxFinalT->setMaximumSize(QSize(53, 20));
+        spinBoxFinalT->setMinimum(2);
 
         gridLayout->addWidget(spinBoxFinalT, 1, 1, 1, 1);
 
@@ -181,33 +184,41 @@ public:
 
         verticalLayout->addWidget(gboxWindow);
 
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        saveButton = new QPushButton(widget);
+        saveButton->setObjectName(QStringLiteral("saveButton"));
+        saveButton->setMaximumSize(QSize(108, 23));
+
+        horizontalLayout_3->addWidget(saveButton);
+
+        progressBar = new QProgressBar(widget);
+        progressBar->setObjectName(QStringLiteral("progressBar"));
+        progressBar->setValue(0);
+        progressBar->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+        progressBar->setTextVisible(true);
+
+        horizontalLayout_3->addWidget(progressBar);
+
+
+        verticalLayout->addLayout(horizontalLayout_3);
+
 
         horizontalLayout_2->addLayout(verticalLayout);
 
 
-        horizontalLayout_3->addWidget(widget);
+        horizontalLayout_4->addWidget(widget);
 
         viewTabs = new QTabWidget(centralWidget);
         viewTabs->setObjectName(QStringLiteral("viewTabs"));
 
-        horizontalLayout_3->addWidget(viewTabs);
+        horizontalLayout_4->addWidget(viewTabs);
 
         SusanForm->setCentralWidget(centralWidget);
-        menuBar = new QMenuBar(SusanForm);
-        menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 903, 21));
-        menuFile = new QMenu(menuBar);
-        menuFile->setObjectName(QStringLiteral("menuFile"));
-        menuHelp = new QMenu(menuBar);
-        menuHelp->setObjectName(QStringLiteral("menuHelp"));
-        SusanForm->setMenuBar(menuBar);
         statusBar = new QStatusBar(SusanForm);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         SusanForm->setStatusBar(statusBar);
-
-        menuBar->addAction(menuFile->menuAction());
-        menuBar->addAction(menuHelp->menuAction());
-        menuFile->addAction(actionExit);
 
         retranslateUi(SusanForm);
         QObject::connect(sliderT, SIGNAL(valueChanged(int)), spinBoxT, SLOT(setValue(int)));
@@ -230,11 +241,10 @@ public:
         label->setText(QApplication::translate("SusanForm", "T", 0));
         label_2->setText(QApplication::translate("SusanForm", "t", 0));
         gboxWindow->setTitle(QApplication::translate("SusanForm", "Non-maxima suppression window", 0));
-        radN1->setText(QApplication::translate("SusanForm", "0.5", 0));
-        radN3->setText(QApplication::translate("SusanForm", "0.9", 0));
-        radN2->setText(QApplication::translate("SusanForm", "0.7", 0));
-        menuFile->setTitle(QApplication::translate("SusanForm", "File", 0));
-        menuHelp->setTitle(QApplication::translate("SusanForm", "Help", 0));
+        radN1->setText(QApplication::translate("SusanForm", "3x3", 0));
+        radN3->setText(QApplication::translate("SusanForm", "5x5", 0));
+        radN2->setText(QApplication::translate("SusanForm", "4x4", 0));
+        saveButton->setText(QApplication::translate("SusanForm", "Save corners", 0));
     } // retranslateUi
 
 };

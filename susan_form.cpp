@@ -5,6 +5,7 @@
 #include <qtextcodec.h>
 #include <qsizepolicy.h>
 #include <opencv2/highgui/highgui.hpp>
+#include <Windows.h>
 
 using namespace std;
 using namespace cv;
@@ -41,7 +42,8 @@ SusanForm::SusanForm(QWidget *parent)
 	QObject::connect(ui.radN3, SIGNAL(clicked()), this, SLOT(drawProcessed()));
 	QObject::connect(ui.spinBoxT, SIGNAL(valueChanged(int)), this, SLOT(drawProcessed()));
 	QObject::connect(ui.spinBoxFinalT, SIGNAL(valueChanged(int)), this, SLOT(drawPoints()));
-
+	QObject::connect(this, SIGNAL(progressChanged(int)), ui.progressBar, SLOT(setValue(int)));
+	QObject::connect(ui.saveButton, SIGNAL(clicked()), this, SLOT(saveCorners()));
 	files.clear();
 
 }
@@ -111,11 +113,11 @@ void SusanForm::drawPoints() {
 		labelResponse->adjustSize();
 		int wind_n = 1;
 		if (ui.radN1->isChecked()) {
-			wind_n = 1;
-		} else if (ui.radN2->isChecked()) {
 			wind_n = 2;
-		} else if (ui.radN3->isChecked()) {
+		} else if (ui.radN2->isChecked()) {
 			wind_n = 3;
+		} else if (ui.radN3->isChecked()) {
+			wind_n = 4;
 		} 
 		vector<Point2i> points = m_image->susan.getCorners(ui.spinBoxFinalT->value(), wind_n);
 		//harris.getCorners(points);//ui.horizontalSlider->value());
@@ -159,5 +161,47 @@ void SusanForm::processImages() {
 		QMessageBox msgBox;
 		msgBox.setText("No images to process!");
 		msgBox.exec();
+	}
+}
+
+void SusanForm::saveCorners() {
+	if (ui.fileListWidget->count() < 1) {
+		return; 
+	} else {
+		int n = 0;
+		int wind_n = 1;
+		if (ui.radN1->isChecked()) {
+			wind_n = 2;
+		} else if (ui.radN2->isChecked()) {
+			wind_n = 3;
+		} else if (ui.radN3->isChecked()) {
+			wind_n = 4;
+		} 
+		int total = ui.fileListWidget->count();
+		ui.progressBar->setMaximum(total);
+		emit progressChanged((n));
+		QString folder_name = QFileDialog::getExistingDirectory(this,
+		tr("Choose directory"));
+		if (!folder_name.isEmpty()) {
+			for (int i = 0; i < total; i++) {
+				TCD::Image* current = (TCD::Image*)ui.fileListWidget->item(i);
+				current->susan.init(current->getGrayscale(), ui.spinBoxT->value(), 3.4);
+				QFileInfo file(QString::fromLocal8Bit(current->getFilename().data()));
+				if (file.exists()) {
+					string corners_filename = string(folder_name.toLocal8Bit().data()) + "/SUSAN_" + string(file.baseName().toLocal8Bit().constData()) + ".xml";
+					FileStorage fs(corners_filename, FileStorage::WRITE);
+					vector<Point2i> points = current->susan.getCorners(ui.spinBoxFinalT->value(), wind_n);
+					fs<<"corners"<<"[";
+					for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {
+						fs<< "{:" << "y" << i->y << "x" << i->x << "}";
+					}
+					fs<<"]";
+					fs.release();
+					string response_filename = string(folder_name.toLocal8Bit().data()) + "/SUSAN_" + string(file.baseName().toLocal8Bit().constData()) + ".jpg";
+					imwrite(response_filename, current->susan.getResponse());
+				}
+				progressChanged((++n));
+			}
+		}
 	}
 }

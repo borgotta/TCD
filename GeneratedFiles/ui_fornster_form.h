@@ -20,8 +20,6 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSlider>
@@ -55,9 +53,6 @@ public:
     QSlider *sliderQ;
     QLabel *label;
     QLabel *label_2;
-    QMenuBar *menuBar;
-    QMenu *menuFile;
-    QMenu *menuHelp;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *FornsterForm)
@@ -156,23 +151,11 @@ public:
         label_2->setObjectName(QStringLiteral("label_2"));
         label_2->setGeometry(QRect(220, 320, 16, 20));
         FornsterForm->setCentralWidget(centralWidget);
-        menuBar = new QMenuBar(FornsterForm);
-        menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 867, 21));
-        menuFile = new QMenu(menuBar);
-        menuFile->setObjectName(QStringLiteral("menuFile"));
-        menuHelp = new QMenu(menuBar);
-        menuHelp->setObjectName(QStringLiteral("menuHelp"));
-        FornsterForm->setMenuBar(menuBar);
         statusBar = new QStatusBar(FornsterForm);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         FornsterForm->setStatusBar(statusBar);
         QWidget::setTabOrder(addButton, removeButton);
         QWidget::setTabOrder(removeButton, fileListWidget);
-
-        menuBar->addAction(menuFile->menuAction());
-        menuBar->addAction(menuHelp->menuAction());
-        menuFile->addAction(actionExit);
 
         retranslateUi(FornsterForm);
 
@@ -194,8 +177,6 @@ public:
         radN2->setText(QApplication::translate("FornsterForm", "0.7", 0));
         label->setText(QApplication::translate("FornsterForm", "w", 0));
         label_2->setText(QApplication::translate("FornsterForm", "q", 0));
-        menuFile->setTitle(QApplication::translate("FornsterForm", "File", 0));
-        menuHelp->setTitle(QApplication::translate("FornsterForm", "Help", 0));
     } // retranslateUi
 
 };

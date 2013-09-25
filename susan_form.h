@@ -18,6 +18,10 @@ private slots:
 	void removeItem();
 	void update();
 	void processImages();
+	void saveCorners();
+
+signals:
+		void progressChanged(int n);
 
 public:
 	SusanForm(QWidget *parent = 0);
