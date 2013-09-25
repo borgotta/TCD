@@ -121,8 +121,8 @@ public:
         sliderT->setObjectName(QStringLiteral("sliderT"));
         sliderT->setMaximumSize(QSize(185, 22));
         sliderT->setMinimum(0);
-        sliderT->setMaximum(254);
-        sliderT->setValue(10);
+        sliderT->setMaximum(100);
+        sliderT->setValue(20);
         sliderT->setOrientation(Qt::Horizontal);
 
         gridLayout->addWidget(sliderT, 0, 0, 1, 1);
@@ -130,9 +130,9 @@ public:
         sliderW = new QSlider(widget);
         sliderW->setObjectName(QStringLiteral("sliderW"));
         sliderW->setMaximumSize(QSize(16777215, 22));
-        sliderW->setMinimum(0);
-        sliderW->setMaximum(99);
-        sliderW->setValue(2);
+        sliderW->setMinimum(1);
+        sliderW->setMaximum(1850);
+        sliderW->setValue(1);
         sliderW->setOrientation(Qt::Horizontal);
 
         gridLayout->addWidget(sliderW, 1, 0, 1, 1);
@@ -150,15 +150,17 @@ public:
         spinBoxT = new QSpinBox(widget);
         spinBoxT->setObjectName(QStringLiteral("spinBoxT"));
         spinBoxT->setMaximumSize(QSize(53, 20));
-        spinBoxT->setMaximum(254);
-        spinBoxT->setValue(10);
+        spinBoxT->setMaximum(100);
+        spinBoxT->setValue(20);
 
         gridLayout->addWidget(spinBoxT, 0, 1, 1, 1);
 
         spinBoxFinalT = new QSpinBox(widget);
         spinBoxFinalT->setObjectName(QStringLiteral("spinBoxFinalT"));
         spinBoxFinalT->setMaximumSize(QSize(53, 20));
-        spinBoxFinalT->setMinimum(2);
+        spinBoxFinalT->setMinimum(1);
+        spinBoxFinalT->setMaximum(1850);
+        spinBoxFinalT->setValue(1);
 
         gridLayout->addWidget(spinBoxFinalT, 1, 1, 1, 1);
 

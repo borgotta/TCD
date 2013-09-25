@@ -215,6 +215,7 @@ pip-log.txt
 .mr.developer.cfg
 
 #Current project ignore files
+/images
 *.jpeg
 *.png
 *.jpg

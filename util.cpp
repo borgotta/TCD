@@ -179,11 +179,11 @@ void Mat2Vector(const cv::Mat &src, std::vector<std::vector<float>> &dst) {
 }
 
 Mat qimage2mat(const QImage& qimage) {
-    cv::Mat mat = cv::Mat(qimage.height(), qimage.width(), CV_8UC4, (uchar*)qimage.bits(), qimage.bytesPerLine());
-    cv::Mat mat2 = cv::Mat(mat.rows, mat.cols, CV_8UC3 );
-    int from_to[] = { 0,0,  1,1,  2,2 };
-    cv::mixChannels( &mat, 1, &mat2, 1, from_to, 3 );
-    return mat2;
+	cv::Mat mat = cv::Mat(qimage.height(), qimage.width(), CV_8UC4, (uchar*)qimage.bits(), qimage.bytesPerLine());
+	cv::Mat mat2 = cv::Mat(mat.rows, mat.cols, CV_8UC3 );
+	int from_to[] = { 0,0,  1,1,  2,2 };
+	cv::mixChannels( &mat, 1, &mat2, 1, from_to, 3 );
+	return mat2;
 };
 
 void nonMaximaSuppresionFloat(Mat &src, int n, Mat &dst) {
@@ -255,6 +255,45 @@ void nonMaximaSuppresionUchar(Mat &src, int n, Mat &dst) {
 				}
 			}
 			pdst[mi*width + mj] = src.at<uchar>(mi, mj);
+			failed: continue;
+		}
+	}
+	} catch(...) {
+		cout<<"("<<mi<<", "<<mj<<")"<<endl;
+		throw;
+	}
+}
+
+void nonMaximaSuppresionInt(Mat &src, int n, Mat &dst) {
+	const int height = src.rows;
+	const int width = src.cols;
+	int mi, mj;
+	dst = Mat::zeros(height, width, CV_32S);
+	int *pdst = dst.ptr<int>();
+	try {
+	for (int i = n; i < height - n; i+=n+1) {
+		for (int j = n; j < width - n; j+=n+1) {
+			mi = i;
+			mj = j;
+			for (int i2 = i; i2 <= i+n; i2++) {
+				for (int j2 = j; j2 <= j+n; j2++) {
+					if (src.at<int>(i2,j2) > src.at<int>(mi,mj)) {
+						mi = i2;
+						mj = j2;
+					}
+				}
+			}
+			for (int i2 = mi - n; (i2 <= mi+n) && (i2 < height); i2++) {
+				for (int j2 = mj - n; (j2 <= mj+n) && (j2 < width); j2++) {
+					if (((i2 >= i) && (i2 <=(i+n))) && ((j2 >= j) && (j2 <= (j+n)))) {
+						continue;
+					}
+					if (src.at<int>(i2,j2) > src.at<int>(mi,mj)) {
+						goto failed;
+					}
+				}
+			}
+			pdst[mi*width + mj] = src.at<int>(mi, mj);
 			failed: continue;
 		}
 	}

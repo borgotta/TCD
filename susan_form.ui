@@ -84,10 +84,10 @@
               <number>0</number>
              </property>
              <property name="maximum">
-              <number>254</number>
+              <number>100</number>
              </property>
              <property name="value">
-              <number>10</number>
+              <number>20</number>
              </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -103,13 +103,13 @@
               </size>
              </property>
              <property name="minimum">
-              <number>0</number>
+              <number>1</number>
              </property>
              <property name="maximum">
-              <number>99</number>
+              <number>1850</number>
              </property>
              <property name="value">
-              <number>2</number>
+              <number>1</number>
              </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -139,10 +139,10 @@
               </size>
              </property>
              <property name="maximum">
-              <number>254</number>
+              <number>100</number>
              </property>
              <property name="value">
-              <number>10</number>
+              <number>20</number>
              </property>
             </widget>
            </item>
@@ -155,7 +155,13 @@
               </size>
              </property>
              <property name="minimum">
-              <number>2</number>
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>1850</number>
+             </property>
+             <property name="value">
+              <number>1</number>
              </property>
             </widget>
            </item>

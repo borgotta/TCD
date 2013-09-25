@@ -13,6 +13,7 @@ void setGaussD(const float sigmaD, std::vector<float>& gaussD);
 void setGaussI(const float sigmaI, std::vector<float>& gaussI);
 void nonMaximaSuppresionFloat(Mat &src, int n, Mat &dst);
 void nonMaximaSuppresionUchar(Mat &src, int n, Mat &dst);
+void nonMaximaSuppresionInt(Mat &src, int n, Mat &dst);
 void convolveX(Mat& src, const std::vector<float>& filter, Mat& dst);
 void convolveY(Mat& src, const std::vector<float>& filter, Mat& dst);
 

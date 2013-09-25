@@ -16,8 +16,10 @@ void SusanDetector::init(Mat image, float t, float radius) {
 	m_radius = radius;
 	m_height = m_image.rows;
 	m_width = m_image.cols;
-	initMask();
-	setResponse();
+	max_no_corners = 1850;
+	//initMask();
+	setupBrightnessLut(&m_bp);
+	setResponseOriginal();
 	done = true;
 }
 
@@ -70,6 +72,76 @@ void SusanDetector::setResponse() {
 
 }
 
+void SusanDetector::setResponseOriginal() {
+	m_response = Mat::zeros(m_height, m_width, CV_32S);
+	int *r = m_response.ptr<int>(); //response
+	int   i, j, n;
+	uchar *p,*cp;
+	uchar *in = m_image.ptr();
+	//memset (r,0,m_height * m_width * sizeof(int));
+
+	for (i=3;i<m_height-3;i++)
+		for (j=3;j<m_width-3;j++)
+		{
+			n=100;
+			p=in + (i-3)*m_width + j - 1;
+			cp=m_bp + in[i*m_width+j]; 
+
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p);
+			p+=m_width-3; 
+
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p);
+			p+=m_width-5;
+
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p);
+			p+=m_width-6;
+
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p);
+			p+=2;
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p);
+			p+=m_width-6;
+
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p);
+			p+=m_width-5;
+
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p);
+			p+=m_width-3;
+
+			n+=*(cp-*p++);
+			n+=*(cp-*p++);
+			n+=*(cp-*p);
+
+			if (n<=max_no_corners)
+				r[i*m_width+j] = max_no_corners - n;
+		}
+}
+
 Mat SusanDetector::getResponse() {
 	return m_response;
 }
@@ -77,15 +149,35 @@ Mat SusanDetector::getResponse() {
 vector<Point2i> SusanDetector::getCorners(int threshold, int wind_n) {
 	vector<Point2i> dst = vector<Point2i>();
 	Mat temp; 
-	nonMaximaSuppresionUchar(m_response, wind_n, temp);
+	nonMaximaSuppresionInt(m_response, wind_n, temp);
 	//normalize(temp,temp,0,255,NORM_L1,CV_8U);
 	for (int y = 0; y < m_height; y++) {
 		for (int x = 0; x < m_width; x++) {
-			if (temp.at<uchar>(y,x) > 0.0 && temp.at<uchar>(y,x) > threshold) {
+			if (temp.at<int>(y,x) > 0.0 && temp.at<int>(y,x) > threshold) {
 				dst.push_back(Point2i(x,y));
 			}
 		}
 	}
 	cout<<"Dst size = "<<dst.size()<<"\n";
 	return dst;
+}
+
+/*
+	Original implementation
+*/
+void SusanDetector::setupBrightnessLut(uchar **bp) {
+	int   k;
+	float temp;
+
+	*bp=(uchar *)malloc(516);
+	*bp=*bp+258;
+
+	for(k=-256;k<257;k++)
+	{
+		temp=((float)k)/((float)m_t);
+		temp=temp*temp;
+		temp=temp*temp*temp;
+		temp=100.0*exp(-temp);
+		*(*bp+k)= (uchar)temp;
+	}
 }
