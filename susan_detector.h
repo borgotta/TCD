@@ -8,7 +8,7 @@ public:
 	SusanDetector();
 	virtual ~SusanDetector(){}
 	std::vector<cv::Point2i> getCorners(int threshold = 0, int wind_n = 2);
-	void init(cv::Mat image, float t, float radius = 3.4);
+	void init(cv::Mat image, float t, bool useSmoothing = false);
 	cv::Mat getResponse();
 
 private:

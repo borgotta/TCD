@@ -6,6 +6,7 @@
 #include <qsizepolicy.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <Windows.h>
+#include <string.h>
 
 using namespace std;
 using namespace cv;
@@ -40,10 +41,12 @@ SusanForm::SusanForm(QWidget *parent)
 	QObject::connect(ui.radN1, SIGNAL(clicked()), this, SLOT(drawProcessed()));
 	QObject::connect(ui.radN2, SIGNAL(clicked()), this, SLOT(drawProcessed()));
 	QObject::connect(ui.radN3, SIGNAL(clicked()), this, SLOT(drawProcessed()));
+	QObject::connect(ui.checkBoxSmoothing, SIGNAL(clicked()), this, SLOT(drawProcessed()));
 	QObject::connect(ui.spinBoxT, SIGNAL(valueChanged(int)), this, SLOT(drawProcessed()));
 	QObject::connect(ui.spinBoxFinalT, SIGNAL(valueChanged(int)), this, SLOT(drawPoints()));
 	QObject::connect(this, SIGNAL(progressChanged(int)), ui.progressBar, SLOT(setValue(int)));
 	QObject::connect(ui.saveButton, SIGNAL(clicked()), this, SLOT(saveCorners()));
+	
 	files.clear();
 
 }
@@ -78,7 +81,6 @@ void SusanForm::updateImage() {
 		m_image = (TCD::Image*)ui.fileListWidget->currentItem();
 		QString fileName = QString::fromLocal8Bit(m_image->getFilename().data());//ui.fileListWidget->currentItem()->text();
 		if (!fileName.isEmpty()) {
-			//Mat image_temp = cv::imread(fileName.toStdString(), CV_LOAD_IMAGE_COLOR);
 			image.load(fileName);
 			if (image.isNull()) {
 				QMessageBox::information(this, tr("Image Viewer"),
@@ -99,7 +101,7 @@ void SusanForm::updateImage() {
 	}
 };
 void SusanForm::drawProcessed() {
-	m_image->susan.init(m_image->getGrayscale(), ui.spinBoxT->value(), 3.4);
+	m_image->susan.init(m_image->getGrayscale(), ui.spinBoxT->value(),  ui.checkBoxSmoothing->isChecked());
 	drawPoints();
 }
 
@@ -125,7 +127,7 @@ void SusanForm::drawPoints() {
 		for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {
 			circle(gradient, *i, 1, Scalar(0,0,255), 2, 8, 0);
 		}
-
+		ui.labelNCorners->setText(QString::number(points.size()));
 		labelCorners->setPixmap(QPixmap::fromImage(Mat2QImageColor(gradient)));
 		labelCorners->adjustSize();
 
@@ -185,7 +187,7 @@ void SusanForm::saveCorners() {
 		if (!folder_name.isEmpty()) {
 			for (int i = 0; i < total; i++) {
 				TCD::Image* current = (TCD::Image*)ui.fileListWidget->item(i);
-				current->susan.init(current->getGrayscale(), ui.spinBoxT->value(), 3.4);
+				current->susan.init(current->getGrayscale(), ui.spinBoxT->value(), ui.checkBoxSmoothing->isChecked());
 				QFileInfo file(QString::fromLocal8Bit(current->getFilename().data()));
 				if (file.exists()) {
 					string corners_filename = string(folder_name.toLocal8Bit().data()) + "/SUSAN_" + string(file.baseName().toLocal8Bit().constData()) + ".xml";

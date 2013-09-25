@@ -13,6 +13,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
@@ -39,7 +40,6 @@ public:
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout_4;
     QWidget *widget;
-    QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout;
     QListWidget *fileListWidget;
     QHBoxLayout *horizontalLayout;
@@ -56,6 +56,10 @@ public:
     QRadioButton *radN1;
     QRadioButton *radN3;
     QRadioButton *radN2;
+    QHBoxLayout *horizontalLayout_2;
+    QCheckBox *checkBoxSmoothing;
+    QLabel *label_3;
+    QLabel *labelNCorners;
     QHBoxLayout *horizontalLayout_3;
     QPushButton *saveButton;
     QProgressBar *progressBar;
@@ -66,7 +70,7 @@ public:
     {
         if (SusanForm->objectName().isEmpty())
             SusanForm->setObjectName(QStringLiteral("SusanForm"));
-        SusanForm->resize(903, 568);
+        SusanForm->resize(1020, 600);
         QIcon icon;
         icon.addFile(QStringLiteral(":/icons/icon.ico"), QSize(), QIcon::Normal, QIcon::Off);
         SusanForm->setWindowIcon(icon);
@@ -81,12 +85,9 @@ public:
         widget = new QWidget(centralWidget);
         widget->setObjectName(QStringLiteral("widget"));
         widget->setMaximumSize(QSize(281, 16777215));
-        horizontalLayout_2 = new QHBoxLayout(widget);
-        horizontalLayout_2->setSpacing(6);
-        horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        verticalLayout = new QVBoxLayout();
+        verticalLayout = new QVBoxLayout(widget);
         verticalLayout->setSpacing(6);
+        verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         fileListWidget = new QListWidget(widget);
         fileListWidget->setObjectName(QStringLiteral("fileListWidget"));
@@ -186,6 +187,27 @@ public:
 
         verticalLayout->addWidget(gboxWindow);
 
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        checkBoxSmoothing = new QCheckBox(widget);
+        checkBoxSmoothing->setObjectName(QStringLiteral("checkBoxSmoothing"));
+
+        horizontalLayout_2->addWidget(checkBoxSmoothing);
+
+        label_3 = new QLabel(widget);
+        label_3->setObjectName(QStringLiteral("label_3"));
+
+        horizontalLayout_2->addWidget(label_3);
+
+        labelNCorners = new QLabel(widget);
+        labelNCorners->setObjectName(QStringLiteral("labelNCorners"));
+
+        horizontalLayout_2->addWidget(labelNCorners);
+
+
+        verticalLayout->addLayout(horizontalLayout_2);
+
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
@@ -207,13 +229,16 @@ public:
         verticalLayout->addLayout(horizontalLayout_3);
 
 
-        horizontalLayout_2->addLayout(verticalLayout);
-
-
         horizontalLayout_4->addWidget(widget);
 
         viewTabs = new QTabWidget(centralWidget);
         viewTabs->setObjectName(QStringLiteral("viewTabs"));
+        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(viewTabs->sizePolicy().hasHeightForWidth());
+        viewTabs->setSizePolicy(sizePolicy);
+        viewTabs->setMinimumSize(QSize(680, 500));
 
         horizontalLayout_4->addWidget(viewTabs);
 
@@ -246,6 +271,9 @@ public:
         radN1->setText(QApplication::translate("SusanForm", "3x3", 0));
         radN3->setText(QApplication::translate("SusanForm", "5x5", 0));
         radN2->setText(QApplication::translate("SusanForm", "4x4", 0));
+        checkBoxSmoothing->setText(QApplication::translate("SusanForm", "Use smoothing", 0));
+        label_3->setText(QApplication::translate("SusanForm", "Corners detected: ", 0));
+        labelNCorners->setText(QApplication::translate("SusanForm", "0", 0));
         saveButton->setText(QApplication::translate("SusanForm", "Save corners", 0));
     } // retranslateUi
 
