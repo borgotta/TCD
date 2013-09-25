@@ -104,14 +104,16 @@ void FornsterForm::updateImage() {
 	}
 };
 void FornsterForm::drawProcessed() {
-	if (ui.radN1->isChecked()) {
-		m_image->fornster.init(m_image->getGrayscale(), 0.5);
-	} else if (ui.radN2->isChecked()) {
-		m_image->fornster.init(m_image->getGrayscale(), 0.7);
-	} else if (ui.radN3->isChecked()) {
-		m_image->fornster.init(m_image->getGrayscale(), 0.9);
-	} 
-	drawPoints();
+	if (m_image != NULL) {
+		if (ui.radN1->isChecked()) {
+			m_image->fornster.init(m_image->getGrayscale(), 0.5);
+		} else if (ui.radN2->isChecked()) {
+			m_image->fornster.init(m_image->getGrayscale(), 0.7);
+		} else if (ui.radN3->isChecked()) {
+			m_image->fornster.init(m_image->getGrayscale(), 0.9);
+		} 
+		drawPoints();
+	}
 
 }
 

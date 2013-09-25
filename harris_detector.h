@@ -11,7 +11,7 @@ public:
 	~HarrisDetector();
 
 	cv::Mat getResponse();
-	void init(cv::Mat image, float sigma = 1.0, float k = 0.4);
+	void init(cv::Mat image, float sigma = 1.0, float k = 0.4, bool smoothBefore = false);
 	std::vector<cv::Point2i> getCorners(float threshold = 0.0, int n = 2);
 
 private:

@@ -101,8 +101,11 @@ void SusanForm::updateImage() {
 	}
 };
 void SusanForm::drawProcessed() {
-	m_image->susan.init(m_image->getGrayscale(), ui.spinBoxT->value(),  ui.checkBoxSmoothing->isChecked());
-	drawPoints();
+	if (m_image != NULL) {
+		m_image->susan.init(m_image->getGrayscale(), ui.spinBoxT->value(),  ui.checkBoxSmoothing->isChecked());
+		drawPoints();
+	}
+	
 }
 
 void SusanForm::drawPoints() {
@@ -146,8 +149,16 @@ void SusanForm::removeItem() {
 		try {
 			files.remove(ui.fileListWidget->currentItem()->text().toLocal8Bit().constData());
 			//ui.fileListWidget->removeItemWidget(ui.fileListWidget->currentItem());
+			int current = ui.fileListWidget->currentRow();
 			qDeleteAll(ui.fileListWidget->selectedItems());
-			//TODO current row change
+			m_image = NULL;
+			if (ui.fileListWidget->count() != 0 ) {
+				if (ui.fileListWidget->count() > current) {
+				ui.fileListWidget->setCurrentRow(current);
+				} else {
+					ui.fileListWidget->setCurrentRow(current - 1);
+				}
+			}
 		} catch(...) {
 			throw;
 		}

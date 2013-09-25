@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>867</width>
-    <height>545</height>
+    <width>877</width>
+    <height>569</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>280</y>
+      <y>250</y>
       <width>182</width>
       <height>25</height>
      </rect>
@@ -71,7 +71,7 @@
       <x>10</x>
       <y>10</y>
       <width>211</width>
-      <height>261</height>
+      <height>231</height>
      </rect>
     </property>
     <property name="dragEnabled">
@@ -84,40 +84,11 @@
      <enum>Qt::ElideRight</enum>
     </property>
    </widget>
-   <widget class="QSlider" name="horizontalSlider">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>330</y>
-      <width>141</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>2000</number>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="spinBox">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>330</y>
-      <width>51</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>2000</number>
-    </property>
-   </widget>
    <widget class="QGroupBox" name="gboxWindow">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>360</y>
+      <x>10</x>
+      <y>410</y>
       <width>171</width>
       <height>101</height>
      </rect>
@@ -184,26 +155,101 @@
      </property>
     </widget>
    </widget>
-   <widget class="QDoubleSpinBox" name="spinBoxK">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>470</y>
-      <width>62</width>
-      <height>22</height>
+      <x>10</x>
+      <y>290</y>
+      <width>211</width>
+      <height>69</height>
      </rect>
     </property>
-    <property name="minimum">
-     <double>0.010000000000000</double>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="0">
+      <widget class="QSlider" name="horizontalSlider">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="value">
+        <number>200</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Thresholds</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="spinBox">
+       <property name="maximumSize">
+        <size>
+         <width>50</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="value">
+        <number>200</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QDoubleSpinBox" name="spinBoxK">
+       <property name="minimum">
+        <double>0.010000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>0.800000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.010000000000000</double>
+       </property>
+       <property name="value">
+        <double>0.040000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_k">
+       <property name="text">
+        <string>k</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_Global">
+       <property name="text">
+        <string>Global</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QCheckBox" name="checkBoxBeforeSmooth">
+    <property name="geometry">
+     <rect>
+      <x>11</x>
+      <y>383</y>
+      <width>88</width>
+      <height>17</height>
+     </rect>
     </property>
-    <property name="maximum">
-     <double>0.800000000000000</double>
-    </property>
-    <property name="singleStep">
-     <double>0.010000000000000</double>
-    </property>
-    <property name="value">
-     <double>0.230000000000000</double>
+    <property name="text">
+     <string>Smoothing</string>
     </property>
    </widget>
   </widget>
@@ -212,7 +258,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>867</width>
+     <width>877</width>
      <height>21</height>
     </rect>
    </property>

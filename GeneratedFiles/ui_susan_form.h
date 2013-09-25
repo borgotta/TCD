@@ -48,8 +48,8 @@ public:
     QGridLayout *gridLayout;
     QSlider *sliderT;
     QSlider *sliderW;
-    QLabel *label;
-    QLabel *label_2;
+    QLabel *label_T;
+    QLabel *label_t;
     QSpinBox *spinBoxT;
     QSpinBox *spinBoxFinalT;
     QGroupBox *gboxWindow;
@@ -58,7 +58,7 @@ public:
     QRadioButton *radN2;
     QHBoxLayout *horizontalLayout_2;
     QCheckBox *checkBoxSmoothing;
-    QLabel *label_3;
+    QLabel *labelCorners;
     QLabel *labelNCorners;
     QHBoxLayout *horizontalLayout_3;
     QPushButton *saveButton;
@@ -138,15 +138,15 @@ public:
 
         gridLayout->addWidget(sliderW, 1, 0, 1, 1);
 
-        label = new QLabel(widget);
-        label->setObjectName(QStringLiteral("label"));
+        label_T = new QLabel(widget);
+        label_T->setObjectName(QStringLiteral("label_T"));
 
-        gridLayout->addWidget(label, 1, 2, 1, 1);
+        gridLayout->addWidget(label_T, 1, 2, 1, 1);
 
-        label_2 = new QLabel(widget);
-        label_2->setObjectName(QStringLiteral("label_2"));
+        label_t = new QLabel(widget);
+        label_t->setObjectName(QStringLiteral("label_t"));
 
-        gridLayout->addWidget(label_2, 0, 2, 1, 1);
+        gridLayout->addWidget(label_t, 0, 2, 1, 1);
 
         spinBoxT = new QSpinBox(widget);
         spinBoxT->setObjectName(QStringLiteral("spinBoxT"));
@@ -195,10 +195,10 @@ public:
 
         horizontalLayout_2->addWidget(checkBoxSmoothing);
 
-        label_3 = new QLabel(widget);
-        label_3->setObjectName(QStringLiteral("label_3"));
+        labelCorners = new QLabel(widget);
+        labelCorners->setObjectName(QStringLiteral("labelCorners"));
 
-        horizontalLayout_2->addWidget(label_3);
+        horizontalLayout_2->addWidget(labelCorners);
 
         labelNCorners = new QLabel(widget);
         labelNCorners->setObjectName(QStringLiteral("labelNCorners"));
@@ -265,14 +265,14 @@ public:
         actionExit->setText(QApplication::translate("SusanForm", "Exit", 0));
         addButton->setText(QApplication::translate("SusanForm", "Add", 0));
         removeButton->setText(QApplication::translate("SusanForm", "Remove", 0));
-        label->setText(QApplication::translate("SusanForm", "T", 0));
-        label_2->setText(QApplication::translate("SusanForm", "t", 0));
+        label_T->setText(QApplication::translate("SusanForm", "T", 0));
+        label_t->setText(QApplication::translate("SusanForm", "t", 0));
         gboxWindow->setTitle(QApplication::translate("SusanForm", "Non-maxima suppression window", 0));
         radN1->setText(QApplication::translate("SusanForm", "3x3", 0));
         radN3->setText(QApplication::translate("SusanForm", "5x5", 0));
         radN2->setText(QApplication::translate("SusanForm", "4x4", 0));
         checkBoxSmoothing->setText(QApplication::translate("SusanForm", "Use smoothing", 0));
-        label_3->setText(QApplication::translate("SusanForm", "Corners detected: ", 0));
+        labelCorners->setText(QApplication::translate("SusanForm", "Corners detected: ", 0));
         labelNCorners->setText(QApplication::translate("SusanForm", "0", 0));
         saveButton->setText(QApplication::translate("SusanForm", "Save corners", 0));
     } // retranslateUi

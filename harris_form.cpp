@@ -42,6 +42,7 @@ HarrisForm::HarrisForm(QWidget *parent)
 	QObject::connect(ui.radN3, SIGNAL(clicked()), this, SLOT(drawPoints()));
 	QObject::connect(ui.radN4, SIGNAL(clicked()), this, SLOT(drawPoints()));
 	QObject::connect(ui.spinBoxK, SIGNAL(valueChanged(double)), this, SLOT(drawProcessed()));
+	QObject::connect(ui.checkBoxBeforeSmooth, SIGNAL(clicked()), this, SLOT(drawProcessed()));
 	//QObject::connect(ui.goButton, SIGNAL(clicked()), this, SLOT(processImages()));
 	files.clear();
 
@@ -98,9 +99,10 @@ void HarrisForm::updateImage() {
 	}
 };
 void HarrisForm::drawProcessed() {
-	m_image->harris.init(m_image->getGrayscale(),1, (float)ui.spinBoxK->value());
+	if (m_image != NULL) {
+	m_image->harris.init(m_image->getGrayscale(),1, (float)ui.spinBoxK->value(), ui.checkBoxBeforeSmooth->isChecked());
 	drawPoints();
-
+	}
 }
 
 void HarrisForm::drawPoints() {

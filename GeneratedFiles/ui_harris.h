@@ -13,10 +13,13 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDoubleSpinBox>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
@@ -45,14 +48,24 @@ public:
     QVBoxLayout *verticalLayout;
     QTabWidget *viewTabs;
     QListWidget *fileListWidget;
-    QSlider *horizontalSlider;
-    QSpinBox *spinBox;
     QGroupBox *gboxWindow;
     QRadioButton *radN1;
     QRadioButton *radN3;
     QRadioButton *radN2;
     QRadioButton *radN4;
+    QWidget *layoutWidget2;
+    QGridLayout *gridLayout;
+    QSlider *horizontalSlider;
+    QLabel *label;
+    QSpinBox *spinBox;
     QDoubleSpinBox *spinBoxK;
+    QLabel *label_k;
+    QLabel *label_Global;
+    QWidget *widget;
+    QGridLayout *gridLayout_2;
+    QCheckBox *checkBoxAfterSmooth;
+    QCheckBox *checkBoxBeforeSmooth;
+    QLabel *label_2;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuHelp;
@@ -62,14 +75,14 @@ public:
     {
         if (HarrisForm->objectName().isEmpty())
             HarrisForm->setObjectName(QStringLiteral("HarrisForm"));
-        HarrisForm->resize(867, 545);
+        HarrisForm->resize(877, 569);
         actionExit = new QAction(HarrisForm);
         actionExit->setObjectName(QStringLiteral("actionExit"));
         centralWidget = new QWidget(HarrisForm);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         layoutWidget = new QWidget(centralWidget);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(20, 280, 182, 25));
+        layoutWidget->setGeometry(QRect(20, 250, 182, 25));
         horizontalLayout = new QHBoxLayout(layoutWidget);
         horizontalLayout->setSpacing(30);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
@@ -100,22 +113,13 @@ public:
 
         fileListWidget = new QListWidget(centralWidget);
         fileListWidget->setObjectName(QStringLiteral("fileListWidget"));
-        fileListWidget->setGeometry(QRect(10, 10, 211, 261));
+        fileListWidget->setGeometry(QRect(10, 10, 211, 231));
         fileListWidget->setDragEnabled(false);
         fileListWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
         fileListWidget->setTextElideMode(Qt::ElideRight);
-        horizontalSlider = new QSlider(centralWidget);
-        horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
-        horizontalSlider->setGeometry(QRect(20, 330, 141, 22));
-        horizontalSlider->setMaximum(2000);
-        horizontalSlider->setOrientation(Qt::Horizontal);
-        spinBox = new QSpinBox(centralWidget);
-        spinBox->setObjectName(QStringLiteral("spinBox"));
-        spinBox->setGeometry(QRect(170, 330, 51, 22));
-        spinBox->setMaximum(2000);
         gboxWindow = new QGroupBox(centralWidget);
         gboxWindow->setObjectName(QStringLiteral("gboxWindow"));
-        gboxWindow->setGeometry(QRect(20, 360, 171, 101));
+        gboxWindow->setGeometry(QRect(10, 410, 171, 101));
         gboxWindow->setAutoFillBackground(true);
         radN1 = new QRadioButton(gboxWindow);
         radN1->setObjectName(QStringLiteral("radN1"));
@@ -130,17 +134,83 @@ public:
         radN4 = new QRadioButton(gboxWindow);
         radN4->setObjectName(QStringLiteral("radN4"));
         radN4->setGeometry(QRect(10, 80, 82, 17));
-        spinBoxK = new QDoubleSpinBox(centralWidget);
+        layoutWidget2 = new QWidget(centralWidget);
+        layoutWidget2->setObjectName(QStringLiteral("layoutWidget2"));
+        layoutWidget2->setGeometry(QRect(10, 290, 211, 69));
+        gridLayout = new QGridLayout(layoutWidget2);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        gridLayout->setContentsMargins(0, 0, 0, 0);
+        horizontalSlider = new QSlider(layoutWidget2);
+        horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
+        horizontalSlider->setMinimum(1);
+        horizontalSlider->setMaximum(255);
+        horizontalSlider->setValue(200);
+        horizontalSlider->setOrientation(Qt::Horizontal);
+
+        gridLayout->addWidget(horizontalSlider, 1, 0, 1, 1);
+
+        label = new QLabel(layoutWidget2);
+        label->setObjectName(QStringLiteral("label"));
+
+        gridLayout->addWidget(label, 0, 0, 1, 1);
+
+        spinBox = new QSpinBox(layoutWidget2);
+        spinBox->setObjectName(QStringLiteral("spinBox"));
+        spinBox->setMaximumSize(QSize(50, 20));
+        spinBox->setMinimum(1);
+        spinBox->setMaximum(255);
+        spinBox->setValue(200);
+
+        gridLayout->addWidget(spinBox, 1, 1, 1, 1);
+
+        spinBoxK = new QDoubleSpinBox(layoutWidget2);
         spinBoxK->setObjectName(QStringLiteral("spinBoxK"));
-        spinBoxK->setGeometry(QRect(30, 470, 62, 22));
         spinBoxK->setMinimum(0.01);
         spinBoxK->setMaximum(0.8);
         spinBoxK->setSingleStep(0.01);
-        spinBoxK->setValue(0.23);
+        spinBoxK->setValue(0.04);
+
+        gridLayout->addWidget(spinBoxK, 0, 1, 1, 1);
+
+        label_k = new QLabel(layoutWidget2);
+        label_k->setObjectName(QStringLiteral("label_k"));
+
+        gridLayout->addWidget(label_k, 0, 2, 1, 1);
+
+        label_Global = new QLabel(layoutWidget2);
+        label_Global->setObjectName(QStringLiteral("label_Global"));
+
+        gridLayout->addWidget(label_Global, 1, 2, 1, 1);
+
+        widget = new QWidget(centralWidget);
+        widget->setObjectName(QStringLiteral("widget"));
+        widget->setGeometry(QRect(10, 360, 211, 41));
+        gridLayout_2 = new QGridLayout(widget);
+        gridLayout_2->setSpacing(6);
+        gridLayout_2->setContentsMargins(11, 11, 11, 11);
+        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        gridLayout_2->setContentsMargins(0, 0, 0, 0);
+        checkBoxAfterSmooth = new QCheckBox(widget);
+        checkBoxAfterSmooth->setObjectName(QStringLiteral("checkBoxAfterSmooth"));
+
+        gridLayout_2->addWidget(checkBoxAfterSmooth, 1, 3, 1, 1);
+
+        checkBoxBeforeSmooth = new QCheckBox(widget);
+        checkBoxBeforeSmooth->setObjectName(QStringLiteral("checkBoxBeforeSmooth"));
+
+        gridLayout_2->addWidget(checkBoxBeforeSmooth, 1, 0, 1, 1);
+
+        label_2 = new QLabel(widget);
+        label_2->setObjectName(QStringLiteral("label_2"));
+
+        gridLayout_2->addWidget(label_2, 0, 0, 1, 1);
+
         HarrisForm->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(HarrisForm);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 867, 21));
+        menuBar->setGeometry(QRect(0, 0, 877, 21));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuHelp = new QMenu(menuBar);
@@ -178,6 +248,12 @@ public:
         radN3->setText(QApplication::translate("HarrisForm", "4 x 4", 0));
         radN2->setText(QApplication::translate("HarrisForm", "3 x 3", 0));
         radN4->setText(QApplication::translate("HarrisForm", "5 x 5", 0));
+        label->setText(QApplication::translate("HarrisForm", "Thresholds", 0));
+        label_k->setText(QApplication::translate("HarrisForm", "k", 0));
+        label_Global->setText(QApplication::translate("HarrisForm", "Global", 0));
+        checkBoxAfterSmooth->setText(QApplication::translate("HarrisForm", "Postprocessed", 0));
+        checkBoxBeforeSmooth->setText(QApplication::translate("HarrisForm", "Preprocessed", 0));
+        label_2->setText(QApplication::translate("HarrisForm", "Smoothing", 0));
         menuFile->setTitle(QApplication::translate("HarrisForm", "File", 0));
         menuHelp->setTitle(QApplication::translate("HarrisForm", "Help", 0));
     } // retranslateUi
