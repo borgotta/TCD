@@ -75,8 +75,6 @@ void HarrisDetector::preprocess2() {
 void HarrisDetector::setResponse() {
 	m_response = Mat::zeros(m_height, m_width, CV_32F);
 	float *pm_response = m_response.ptr<float>();
-	float min = numeric_limits<float>::max();
-	float max = numeric_limits<float>::lowest();
 	for (int y = 0; y < m_height; ++y) {
 		for (int x = 0; x < m_width; ++x) {
 			//const float dIdxdIdx = m_dIdxdIdx.at<float>(y,x);
@@ -86,12 +84,9 @@ void HarrisDetector::setResponse() {
 			const float D = m_dIdxdIdx.at<float>(y,x) * m_dIdydIdy.at<float>(y,x) - m_dIdxdIdy.at<float>(y,x) * m_dIdxdIdy.at<float>(y,x);
 			const float tr = m_dIdxdIdx.at<float>(y,x) + m_dIdydIdy.at<float>(y,x);
 			const float response = (D - m_k * tr * tr);
-			if (min > response) min = response;
-			if (max < response) max = response;
 			pm_response[y*m_width + x] = response;
 		}
 	}
-	cout<<"max="<<max<<", min="<<min<<" "<< endl;
 }
 
 vector<Point2i> HarrisDetector::getCorners(float threshold, int wind_n) {

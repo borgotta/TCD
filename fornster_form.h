@@ -16,13 +16,14 @@ private slots:
 	void drawProcessed();
 	void drawPoints();
 	void removeItem();
-	void update();
-	void processImages();
 	void slider2spinboxW(int value);
 	void slider2spinboxQ(int value);
 	void spinbox2sliderW(double value);
 	void spinbox2sliderQ(double value);
+	void saveCorners();
 
+signals:
+	void progressChanged(int n);
 public:
 	FornsterForm(QWidget *parent = 0);
 	~FornsterForm();

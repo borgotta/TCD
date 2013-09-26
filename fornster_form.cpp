@@ -48,7 +48,9 @@ FornsterForm::FornsterForm(QWidget *parent)
 	QObject::connect(ui.radN3, SIGNAL(clicked()), this, SLOT(drawProcessed()));
 	QObject::connect(ui.spinBoxQ, SIGNAL(valueChanged(double)), this, SLOT(drawPoints()));
 	QObject::connect(ui.spinBoxW, SIGNAL(valueChanged(double)), this, SLOT(drawPoints()));
-	//QObject::connect(ui.goButton, SIGNAL(clicked()), this, SLOT(processImages()));
+	QObject::connect(this, SIGNAL(progressChanged(int)), ui.progressBar, SLOT(setValue(int)));
+	QObject::connect(ui.saveButton, SIGNAL(clicked()), this, SLOT(saveCorners()));
+	QObject::connect(ui.checkBoxSmoothing, SIGNAL(clicked()), this, SLOT(drawProcessed()));
 	files.clear();
 
 }
@@ -90,8 +92,6 @@ void FornsterForm::updateImage() {
 					tr("Cannot load %1.").arg(fileName));
 				return;
 			}
-			
-			//m_image = imread(fileName.toLocal8Bit().constData());
 
 			labelOriginal->setPixmap(QPixmap::fromImage(image));
 			labelOriginal->adjustSize();
@@ -105,13 +105,8 @@ void FornsterForm::updateImage() {
 };
 void FornsterForm::drawProcessed() {
 	if (m_image != NULL) {
-		if (ui.radN1->isChecked()) {
-			m_image->fornster.init(m_image->getGrayscale(), 0.5);
-		} else if (ui.radN2->isChecked()) {
-			m_image->fornster.init(m_image->getGrayscale(), 0.7);
-		} else if (ui.radN3->isChecked()) {
-			m_image->fornster.init(m_image->getGrayscale(), 0.9);
-		} 
+		m_image->fornster.init(m_image->getGrayscale(), 1.0, ui.checkBoxSmoothing->isChecked());
+
 		drawPoints();
 	}
 
@@ -130,29 +125,23 @@ void FornsterForm::drawPoints() {
 		labelResponseW->adjustSize();
 		int wind_n = 1;
 		if (ui.radN1->isChecked()) {
-			wind_n = 1;
-		} else if (ui.radN2->isChecked()) {
-			wind_n = 2;
-		} else if (ui.radN3->isChecked()) {
 			wind_n = 3;
+		} else if (ui.radN2->isChecked()) {
+			wind_n = 4;
+		} else if (ui.radN3->isChecked()) {
+			wind_n = 5;
 		} 
-		vector<Point2i> points = m_image->fornster.getCorners(ui.spinBoxW->value(), ui.spinBoxQ->value(), 5);
+		vector<Point2i> points = m_image->fornster.getCorners(ui.spinBoxW->value(), ui.spinBoxQ->value(), wind_n);
 		//harris.getCorners(points);//ui.horizontalSlider->value());
 		cvtColor(gradient, gradient, CV_GRAY2RGB);
 		for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {
 			circle(gradient, *i, 1, Scalar(0,0,255), 2, 8, 0);
 		}
 
+		ui.labelNCorners->setText(QString::number(points.size()));
 		labelCorners->setPixmap(QPixmap::fromImage(Mat2QImageColor(gradient)));
 		labelCorners->adjustSize();
 
-	}
-}
-void FornsterForm::update() {
-	ui.fileListWidget->clear();
-
-	for (list<string>::iterator it = files.begin(); it!=files.end(); it++) {
-		ui.fileListWidget->addItem(QString::fromStdString(*it));
 	}
 }
 
@@ -161,23 +150,19 @@ void FornsterForm::removeItem() {
 		try {
 			files.remove(ui.fileListWidget->currentItem()->text().toLocal8Bit().constData());
 			//ui.fileListWidget->removeItemWidget(ui.fileListWidget->currentItem());
+			int current = ui.fileListWidget->currentRow();
 			qDeleteAll(ui.fileListWidget->selectedItems());
-			//TODO current row change
+			m_image = NULL;
+			if (ui.fileListWidget->count() != 0 ) {
+				if (ui.fileListWidget->count() > current) {
+				ui.fileListWidget->setCurrentRow(current);
+				} else {
+					ui.fileListWidget->setCurrentRow(current - 1);
+				}
+			}
 		} catch(...) {
 			throw;
 		}
-		//update();
-	}
-}
-
-void FornsterForm::processImages() {
-	if (files.size() != 0) {
-		
-
-	} else {
-		QMessageBox msgBox;
-		msgBox.setText("No images to process!");
-		msgBox.exec();
 	}
 }
 
@@ -192,4 +177,50 @@ void FornsterForm::spinbox2sliderW(double value) {
 }
 void FornsterForm::spinbox2sliderQ(double value) {
 	ui.sliderQ->setValue((int)(value*100));
+}
+void FornsterForm::saveCorners() {
+	if (ui.fileListWidget->count() < 1) {
+		return; 
+	} else {
+		int n = 0;
+		int wind_n = 1;
+		if (ui.radN1->isChecked()) {
+			wind_n = 3;
+		} else if (ui.radN2->isChecked()) {
+			wind_n = 5;
+		} else if (ui.radN3->isChecked()) {
+			wind_n = 5;
+		} 
+		int total = ui.fileListWidget->count();
+		ui.progressBar->setMaximum(total);
+		emit progressChanged((n));
+		QString folder_name = QFileDialog::getExistingDirectory(this,
+		tr("Choose directory"));
+		if (!folder_name.isEmpty()) {
+			for (int i = 0; i < total; i++) {
+				TCD::Image* current = (TCD::Image*)ui.fileListWidget->item(i);
+				current->fornster.init(current->getGrayscale(), 1.0, ui.checkBoxSmoothing->isChecked());
+				QFileInfo file(QString::fromLocal8Bit(current->getFilename().data()));
+				if (file.exists()) {
+					string corners_filename = string(folder_name.toLocal8Bit().data()) + "/fornster_" + string(file.baseName().toLocal8Bit().constData()) + ".xml";
+					FileStorage fs(corners_filename, FileStorage::WRITE);
+					vector<Point2i> points = current->fornster.getCorners(ui.spinBoxW->value(), ui.spinBoxQ->value(), wind_n);
+					fs<<"corners"<<"[";
+					for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {
+						fs<< "{:" << "y" << i->y << "x" << i->x << "}";
+					}
+					fs<<"]";
+					fs.release();
+					Mat gradient = current->getGrayscale();
+					cvtColor(gradient, gradient, CV_GRAY2RGB);
+					for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {
+						circle(gradient, *i, 1, Scalar(0,0,255), 2, 8, 0);
+					}
+					string ponts_filename = string(folder_name.toLocal8Bit().data()) + "/Fornster_" + string(file.baseName().toLocal8Bit().constData()) + ".jpg";
+					imwrite(ponts_filename, gradient);
+				}
+				progressChanged((++n));
+			}
+		}
+	}
 }

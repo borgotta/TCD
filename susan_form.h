@@ -16,8 +16,6 @@ private slots:
 	void drawProcessed();
 	void drawPoints();
 	void removeItem();
-	void update();
-	void processImages();
 	void saveCorners();
 
 signals:

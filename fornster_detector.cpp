@@ -6,10 +6,12 @@ using namespace cv;
 
 FornsterDetector::FornsterDetector() {};
 
-void FornsterDetector::init(Mat image, float sigma) { 
+void FornsterDetector::init(Mat image, float sigma, bool smooth) { 
 	done = false;
 	image.convertTo(m_image, CV_32F);
-
+		if (smooth) {
+		GaussianBlur(m_image, m_image, Size(5,5), 0);
+	}
 	m_sigmaI = sigma;
 	m_height = m_image.rows;
 	m_width = m_image.cols;
@@ -71,7 +73,8 @@ void FornsterDetector::setResponse() {
 
 	float *pm_qResponse = m_qResponse.ptr<float>();
 	float *pm_wResponse = m_wResponse.ptr<float>();
-
+	float max_w = 0;
+	total = 0;
 	for (int y = 0; y < m_height; ++y) {
 		for (int x = 0; x < m_width; ++x) {
 
@@ -79,25 +82,41 @@ void FornsterDetector::setResponse() {
 			const float tr = m_dIdxdIdx.at<float>(y,x) + m_dIdydIdy.at<float>(y,x);
 			const float w = tr == 0 ? 0.0 : D / tr;
 			pm_wResponse[y*m_width + x] = w > 0.0 ? w : 0.0;
-			m_w += w / total;
+			if (w != 0.0) {
+				m_w += w;
+				total++;
+			}
 			const float q = tr == 0.0 ? 0.0 : (4 * w / tr);
-			//if (q != 0.0) cout<<"q="<<q<<" ";
 			pm_qResponse[y*m_width + x] = q >= 0.0 && q <= 1.0 ? q : 0.0; // (4*D)/tr^2
 		}
 	}
+	m_w/=total;
+	cout<<max_w<<endl;
 }
 
 vector<Point2i> FornsterDetector::getCorners(float w, float q, int wind_n) {
 	vector<Point2i> dst = vector<Point2i>();
 	const float w_thresh = w * m_w; 
 	Mat tempW, tempQ;
-	tempW = m_wResponse * (1.0/m_w);
-	tempQ = m_wResponse + m_qResponse;
+	tempW = Mat::zeros(m_height, m_width, CV_32F);
+	float *p_tempW = tempW.ptr<float>();
+	//tempW = m_wResponse * (1.0/m_w);
+	//tempQ = m_wResponse + m_qResponse;
 	//nonMaximaSuppresionFloat(m_wResponse, wind_n, tempW);
-	nonMaximaSuppresionFloat(tempQ, wind_n, tempW);
+	//nonMaximaSuppresionFloat(m_wResponse, wind_n, tempW);
 	for (int y = 0; y < m_height; y++) {
 		for (int x = 0; x < m_width; x++) {
-			if (tempW.at<float>(y,x) >= (w+q) && m_wResponse.at<float>(y,x) >= w_thresh && m_qResponse.at<float>(y,x) >= q) {
+			if (m_wResponse.at<float>(y,x) >= w_thresh && m_qResponse.at<float>(y,x) >= q) {
+				p_tempW[y*m_width + x] = m_wResponse.at<float>(y,x);
+				//dst.push_back(Point2i(x,y));
+			}
+		}
+	}
+	nonMaximaSuppresionFloat(tempW, wind_n, tempQ);
+	p_tempW = tempQ.ptr<float>();
+	for (int y = 0; y < m_height; y++) {
+		for (int x = 0; x < m_width; x++) { 
+			if (p_tempW[y*m_width + x] != 0.0) {
 				dst.push_back(Point2i(x,y));
 			}
 		}

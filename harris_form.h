@@ -18,16 +18,16 @@ private slots:
 	void drawProcessed();
 	void drawPoints();
 	void removeItem();
-	void update();
-	void processImages();
+	void saveCorners();
 
+signals:
+		void progressChanged(int n);
 public:
 	HarrisForm(QWidget *parent = 0);
 	~HarrisForm();
 
 private:
 	Ui::HarrisForm ui;
-	//HarrisDetector harris;
 	std::list<std::string> files;
 	std::vector<TCD::Image*> images;
 	QLabel *labelOriginal;

@@ -62,18 +62,13 @@ void SusanForm::addImages() {
 		tr("Images (*.png *.jpg);;"
 		"All Files (*)"));
 	if (!fileNames.isEmpty()) {
-		//ui.fileListWidget->addItems(fileNames);
 		for (QList<QString>::iterator it = fileNames.begin(); it != fileNames.end(); it++) {
-			//files.push_back(it->toStdString());
 			images.push_back(new TCD::Image(ui.fileListWidget, it->toLocal8Bit().constData()));
-			//ui.fileListWidget->addItem(new TCD::Image(ui.fileListWidget, it->toLocal8Bit().constData()));
-			
 		}
 	}
 	if (ui.fileListWidget->count() > 0 && ui.fileListWidget->currentRow() == -1) {
 		ui.fileListWidget->setCurrentRow(0);
 	}
-	//update();
 }
 
 void SusanForm::updateImage() {
@@ -113,7 +108,6 @@ void SusanForm::drawPoints() {
 		Mat gradient = m_image->getGrayscale();
 		Mat response = m_image->susan.getResponse();
 
-		//normalize(response, responseQ, 0, 255, NORM_MINMAX, CV_8UC1);
 		labelResponse->setPixmap(QPixmap::fromImage(Mat2QImageGrey(response)));
 		labelResponse->adjustSize();
 		int wind_n = 1;
@@ -125,7 +119,6 @@ void SusanForm::drawPoints() {
 			wind_n = 4;
 		} 
 		vector<Point2i> points = m_image->susan.getCorners(ui.spinBoxFinalT->value(), wind_n);
-		//harris.getCorners(points);//ui.horizontalSlider->value());
 		cvtColor(gradient, gradient, CV_GRAY2RGB);
 		for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {
 			circle(gradient, *i, 1, Scalar(0,0,255), 2, 8, 0);
@@ -134,13 +127,6 @@ void SusanForm::drawPoints() {
 		labelCorners->setPixmap(QPixmap::fromImage(Mat2QImageColor(gradient)));
 		labelCorners->adjustSize();
 
-	}
-}
-void SusanForm::update() {
-	ui.fileListWidget->clear();
-
-	for (list<string>::iterator it = files.begin(); it!=files.end(); it++) {
-		ui.fileListWidget->addItem(QString::fromStdString(*it));
 	}
 }
 
@@ -162,18 +148,6 @@ void SusanForm::removeItem() {
 		} catch(...) {
 			throw;
 		}
-		//update();
-	}
-}
-
-void SusanForm::processImages() {
-	if (files.size() != 0) {
-		
-
-	} else {
-		QMessageBox msgBox;
-		msgBox.setText("No images to process!");
-		msgBox.exec();
 	}
 }
 
@@ -210,8 +184,15 @@ void SusanForm::saveCorners() {
 					}
 					fs<<"]";
 					fs.release();
-					string response_filename = string(folder_name.toLocal8Bit().data()) + "/SUSAN_" + string(file.baseName().toLocal8Bit().constData()) + ".jpg";
+					string response_filename = string(folder_name.toLocal8Bit().data()) + "/SUSAN_Response_" + string(file.baseName().toLocal8Bit().constData()) + ".jpg";
 					imwrite(response_filename, current->susan.getResponse());
+					Mat gradient = current->getGrayscale();
+					cvtColor(gradient, gradient, CV_GRAY2RGB);
+					for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {
+						circle(gradient, *i, 1, Scalar(0,0,255), 2, 8, 0);
+					}
+					string ponts_filename = string(folder_name.toLocal8Bit().data()) + "/SUSAN_Points_" + string(file.baseName().toLocal8Bit().constData()) + ".jpg";
+					imwrite(ponts_filename, gradient);
 				}
 				progressChanged((++n));
 			}

@@ -1,345 +1,375 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Павел (EMBRACE) -->
 <ui version="4.0">
- <class>HarrisForm</class>
- <widget class="QMainWindow" name="HarrisForm">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>877</width>
-    <height>569</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>Harris Corner Detector</string>
-  </property>
-  <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>250</y>
-      <width>182</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <property name="spacing">
-      <number>30</number>
-     </property>
-     <item>
-      <widget class="QPushButton" name="addButton">
-       <property name="text">
-        <string>Add</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="removeButton">
-       <property name="text">
-        <string>Remove</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>10</y>
-      <width>611</width>
-      <height>491</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="spacing">
-      <number>20</number>
-     </property>
-     <item>
-      <widget class="QTabWidget" name="viewTabs">
-       <property name="currentIndex">
-        <number>-1</number>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QListWidget" name="fileListWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>211</width>
-      <height>231</height>
-     </rect>
-    </property>
-    <property name="dragEnabled">
-     <bool>false</bool>
-    </property>
-    <property name="selectionMode">
-     <enum>QAbstractItemView::ExtendedSelection</enum>
-    </property>
-    <property name="textElideMode">
-     <enum>Qt::ElideRight</enum>
-    </property>
-   </widget>
-   <widget class="QGroupBox" name="gboxWindow">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>410</y>
-      <width>171</width>
-      <height>101</height>
-     </rect>
-    </property>
-    <property name="autoFillBackground">
-     <bool>true</bool>
-    </property>
-    <property name="title">
-     <string>Non-maxima suppression window</string>
-    </property>
-    <widget class="QRadioButton" name="radN1">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>82</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>2 x 2</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="radN3">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>60</y>
-       <width>82</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>4 x 4</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="radN2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>40</y>
-       <width>82</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>3 x 3</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="radN4">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>80</y>
-       <width>82</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>5 x 5</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>290</y>
-      <width>211</width>
-      <height>69</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="0">
-      <widget class="QSlider" name="horizontalSlider">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>255</number>
-       </property>
-       <property name="value">
-        <number>200</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Thresholds</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="spinBox">
-       <property name="maximumSize">
-        <size>
-         <width>50</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>255</number>
-       </property>
-       <property name="value">
-        <number>200</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QDoubleSpinBox" name="spinBoxK">
-       <property name="minimum">
-        <double>0.010000000000000</double>
-       </property>
-       <property name="maximum">
-        <double>0.800000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>0.010000000000000</double>
-       </property>
-       <property name="value">
-        <double>0.040000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_k">
-       <property name="text">
-        <string>k</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="label_Global">
-       <property name="text">
-        <string>Global</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QCheckBox" name="checkBoxBeforeSmooth">
-    <property name="geometry">
-     <rect>
-      <x>11</x>
-      <y>383</y>
-      <width>88</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Smoothing</string>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>877</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="actionExit"/>
-   </widget>
-   <widget class="QMenu" name="menuHelp">
-    <property name="title">
-     <string>Help</string>
-    </property>
-   </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuHelp"/>
-  </widget>
-  <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionExit">
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </action>
- </widget>
- <layoutdefault spacing="6" margin="11"/>
- <tabstops>
-  <tabstop>addButton</tabstop>
-  <tabstop>removeButton</tabstop>
-  <tabstop>fileListWidget</tabstop>
- </tabstops>
- <resources>
-  <include location="truecornerdetector.qrc"/>
- </resources>
- <connections>
-  <connection>
-   <sender>actionExit</sender>
-   <signal>triggered()</signal>
-   <receiver>HarrisForm</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>433</x>
-     <y>272</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>horizontalSlider</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBox</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>124</x>
-     <y>363</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>195</x>
-     <y>363</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>horizontalSlider</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>177</x>
-     <y>355</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>118</x>
-     <y>363</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+	<class>HarrisForm</class>
+	<widget class="QMainWindow" name="HarrisForm">
+		<property name="geometry">
+			<rect>
+				<x>0</x>
+				<y>0</y>
+				<width>877</width>
+				<height>569</height>
+			</rect>
+		</property>
+		<property name="windowTitle">
+			<string>Harris Corner Detector</string>
+		</property>
+		<property name="windowIcon">
+			<iconset resource="truecornerdetector.qrc">
+				<normaloff>:/icons/icon.ico</normaloff>:/icons/icon.ico</iconset>
+		</property>
+		<widget class="QWidget" name="centralWidget">
+			<layout class="QHBoxLayout" name="horizontalLayout_4">
+				<item>
+					<widget class="QWidget" name="widget" native="true">
+						<property name="maximumSize">
+							<size>
+								<width>281</width>
+								<height>16777215</height>
+							</size>
+						</property>
+						<layout class="QVBoxLayout" name="verticalLayout">
+							<item>
+								<widget class="QListWidget" name="fileListWidget">
+									<property name="dragEnabled">
+										<bool>false</bool>
+									</property>
+									<property name="selectionMode">
+										<enum>QAbstractItemView::ExtendedSelection</enum>
+									</property>
+									<property name="textElideMode">
+										<enum>Qt::ElideRight</enum>
+									</property>
+								</widget>
+							</item>
+							<item>
+								<layout class="QHBoxLayout" name="horizontalLayout">
+									<property name="spacing">
+										<number>30</number>
+									</property>
+									<item>
+										<widget class="QPushButton" name="addButton">
+											<property name="text">
+												<string>Add</string>
+											</property>
+										</widget>
+									</item>
+									<item>
+										<widget class="QPushButton" name="removeButton">
+											<property name="text">
+												<string>Remove</string>
+											</property>
+										</widget>
+									</item>
+								</layout>
+							</item>
+							<item>
+								<layout class="QGridLayout" name="gridLayout">
+									<item row="1" column="0">
+										<widget class="QSlider" name="horizontalSlider">
+											<property name="minimum">
+												<number>1</number>
+											</property>
+											<property name="maximum">
+												<number>255</number>
+											</property>
+											<property name="value">
+												<number>200</number>
+											</property>
+											<property name="orientation">
+												<enum>Qt::Horizontal</enum>
+											</property>
+										</widget>
+									</item>
+									<item row="0" column="0">
+										<widget class="QLabel" name="label">
+											<property name="text">
+												<string>Thresholds</string>
+											</property>
+										</widget>
+									</item>
+									<item row="1" column="1">
+										<widget class="QSpinBox" name="spinBox">
+											<property name="maximumSize">
+												<size>
+													<width>50</width>
+													<height>20</height>
+												</size>
+											</property>
+											<property name="minimum">
+												<number>1</number>
+											</property>
+											<property name="maximum">
+												<number>255</number>
+											</property>
+											<property name="value">
+												<number>200</number>
+											</property>
+										</widget>
+									</item>
+									<item row="0" column="1">
+										<widget class="QDoubleSpinBox" name="spinBoxK">
+											<property name="minimum">
+												<double>0.010000000000000</double>
+											</property>
+											<property name="maximum">
+												<double>0.800000000000000</double>
+											</property>
+											<property name="singleStep">
+												<double>0.010000000000000</double>
+											</property>
+											<property name="value">
+												<double>0.040000000000000</double>
+											</property>
+										</widget>
+									</item>
+									<item row="0" column="2">
+										<widget class="QLabel" name="label_k">
+											<property name="text">
+												<string>k</string>
+											</property>
+										</widget>
+									</item>
+									<item row="1" column="2">
+										<widget class="QLabel" name="label_Global">
+											<property name="text">
+												<string>Global</string>
+											</property>
+										</widget>
+									</item>
+								</layout>
+							</item>
+							<item>
+								<widget class="QGroupBox" name="gboxWindow">
+									<property name="minimumSize">
+										<size>
+											<width>256</width>
+											<height>81</height>
+										</size>
+									</property>
+									<property name="maximumSize">
+										<size>
+											<width>256</width>
+											<height>16777215</height>
+										</size>
+									</property>
+									<property name="autoFillBackground">
+										<bool>true</bool>
+									</property>
+									<property name="title">
+										<string>Non-maxima suppression window</string>
+									</property>
+									<widget class="QRadioButton" name="radN1">
+										<property name="geometry">
+											<rect>
+												<x>10</x>
+												<y>20</y>
+												<width>82</width>
+												<height>17</height>
+											</rect>
+										</property>
+										<property name="text">
+											<string>2x2</string>
+										</property>
+										<property name="checked">
+											<bool>false</bool>
+										</property>
+									</widget>
+									<widget class="QRadioButton" name="radN2">
+										<property name="geometry">
+											<rect>
+												<x>10</x>
+												<y>40</y>
+												<width>82</width>
+												<height>17</height>
+											</rect>
+										</property>
+										<property name="text">
+											<string>3x3</string>
+										</property>
+										<property name="checked">
+											<bool>true</bool>
+										</property>
+									</widget>
+									<widget class="QRadioButton" name="radN3">
+										<property name="geometry">
+											<rect>
+												<x>10</x>
+												<y>60</y>
+												<width>82</width>
+												<height>17</height>
+											</rect>
+										</property>
+										<property name="text">
+											<string>4x4</string>
+										</property>
+									</widget>
+									<widget class="QRadioButton" name="radN4">
+										<property name="geometry">
+											<rect>
+												<x>10</x>
+												<y>80</y>
+												<width>82</width>
+												<height>17</height>
+											</rect>
+										</property>
+										<property name="text">
+											<string>5 x 5</string>
+										</property>
+									</widget>
+								</widget>
+							</item>
+							<item>
+								<layout class="QHBoxLayout" name="horizontalLayout_2">
+									<item>
+										<widget class="QCheckBox" name="checkBoxBeforeSmooth">
+											<property name="geometry">
+												<rect>
+													<x>11</x>
+													<y>383</y>
+													<width>88</width>
+													<height>17</height>
+												</rect>
+											</property>
+											<property name="text">
+												<string>Smoothing</string>
+											</property>
+										</widget>
+									</item>
+									<item>
+										<widget class="QLabel" name="labelCorners">
+											<property name="text">
+												<string>Corners detected: </string>
+											</property>
+										</widget>
+									</item>
+									<item>
+										<widget class="QLabel" name="labelNCorners">
+											<property name="text">
+												<string>0</string>
+											</property>
+										</widget>
+									</item>
+								</layout>
+							</item>
+							<item>
+								<layout class="QHBoxLayout" name="horizontalLayout_3">
+									<item>
+										<widget class="QPushButton" name="saveButton">
+											<property name="maximumSize">
+												<size>
+													<width>108</width>
+													<height>23</height>
+												</size>
+											</property>
+											<property name="text">
+												<string>Save corners</string>
+											</property>
+										</widget>
+									</item>
+									<item>
+										<widget class="QProgressBar" name="progressBar">
+											<property name="value">
+												<number>0</number>
+											</property>
+											<property name="alignment">
+												<set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+											</property>
+											<property name="textVisible">
+												<bool>true</bool>
+											</property>
+										</widget>
+									</item>
+								</layout>
+							</item>
+						</layout>
+					</widget>
+				</item>
+				<item>
+					<widget class="QTabWidget" name="viewTabs">
+						<property name="sizePolicy">
+							<sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+								<horstretch>0</horstretch>
+								<verstretch>0</verstretch>
+							</sizepolicy>
+						</property>
+						<property name="minimumSize">
+							<size>
+								<width>680</width>
+								<height>500</height>
+							</size>
+						</property>
+						<property name="currentIndex">
+							<number>-1</number>
+						</property>
+					</widget>
+				</item>
+			</layout>
+		</widget>
+		<widget class="QStatusBar" name="statusBar"/>
+		<action name="actionExit">
+			<property name="text">
+				<string>Exit</string>
+			</property>
+		</action>
+	</widget>
+	<layoutdefault spacing="6" margin="11"/>
+	<tabstops>
+		<tabstop>addButton</tabstop>
+		<tabstop>removeButton</tabstop>
+		<tabstop>fileListWidget</tabstop>
+	</tabstops>
+	<resources>
+		<include location="truecornerdetector.qrc"/>
+	</resources>
+	<connections>
+		<connection>
+			<sender>actionExit</sender>
+			<signal>triggered()</signal>
+			<receiver>HarrisForm</receiver>
+			<slot>close()</slot>
+			<hints>
+				<hint type="sourcelabel">
+					<x>-1</x>
+					<y>-1</y>
+				</hint>
+				<hint type="destinationlabel">
+					<x>433</x>
+					<y>272</y>
+				</hint>
+			</hints>
+		</connection>
+		<connection>
+			<sender>horizontalSlider</sender>
+			<signal>valueChanged(int)</signal>
+			<receiver>spinBox</receiver>
+			<slot>setValue(int)</slot>
+			<hints>
+				<hint type="sourcelabel">
+					<x>124</x>
+					<y>363</y>
+				</hint>
+				<hint type="destinationlabel">
+					<x>195</x>
+					<y>363</y>
+				</hint>
+			</hints>
+		</connection>
+		<connection>
+			<sender>spinBox</sender>
+			<signal>valueChanged(int)</signal>
+			<receiver>horizontalSlider</receiver>
+			<slot>setValue(int)</slot>
+			<hints>
+				<hint type="sourcelabel">
+					<x>177</x>
+					<y>355</y>
+				</hint>
+				<hint type="destinationlabel">
+					<x>118</x>
+					<y>363</y>
+				</hint>
+			</hints>
+		</connection>
+	</connections>
 </ui>

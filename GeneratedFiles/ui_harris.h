@@ -22,8 +22,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSlider>
@@ -40,20 +39,13 @@ class Ui_HarrisForm
 public:
     QAction *actionExit;
     QWidget *centralWidget;
-    QWidget *layoutWidget;
+    QHBoxLayout *horizontalLayout_4;
+    QWidget *widget;
+    QVBoxLayout *verticalLayout;
+    QListWidget *fileListWidget;
     QHBoxLayout *horizontalLayout;
     QPushButton *addButton;
     QPushButton *removeButton;
-    QWidget *layoutWidget1;
-    QVBoxLayout *verticalLayout;
-    QTabWidget *viewTabs;
-    QListWidget *fileListWidget;
-    QGroupBox *gboxWindow;
-    QRadioButton *radN1;
-    QRadioButton *radN3;
-    QRadioButton *radN2;
-    QRadioButton *radN4;
-    QWidget *layoutWidget2;
     QGridLayout *gridLayout;
     QSlider *horizontalSlider;
     QLabel *label;
@@ -61,14 +53,19 @@ public:
     QDoubleSpinBox *spinBoxK;
     QLabel *label_k;
     QLabel *label_Global;
-    QWidget *widget;
-    QGridLayout *gridLayout_2;
-    QCheckBox *checkBoxAfterSmooth;
+    QGroupBox *gboxWindow;
+    QRadioButton *radN1;
+    QRadioButton *radN2;
+    QRadioButton *radN3;
+    QRadioButton *radN4;
+    QHBoxLayout *horizontalLayout_2;
     QCheckBox *checkBoxBeforeSmooth;
-    QLabel *label_2;
-    QMenuBar *menuBar;
-    QMenu *menuFile;
-    QMenu *menuHelp;
+    QLabel *labelCorners;
+    QLabel *labelNCorners;
+    QHBoxLayout *horizontalLayout_3;
+    QPushButton *saveButton;
+    QProgressBar *progressBar;
+    QTabWidget *viewTabs;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *HarrisForm)
@@ -76,73 +73,52 @@ public:
         if (HarrisForm->objectName().isEmpty())
             HarrisForm->setObjectName(QStringLiteral("HarrisForm"));
         HarrisForm->resize(877, 569);
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/icons/icon.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        HarrisForm->setWindowIcon(icon);
         actionExit = new QAction(HarrisForm);
         actionExit->setObjectName(QStringLiteral("actionExit"));
         centralWidget = new QWidget(HarrisForm);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        layoutWidget = new QWidget(centralWidget);
-        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(20, 250, 182, 25));
-        horizontalLayout = new QHBoxLayout(layoutWidget);
+        horizontalLayout_4 = new QHBoxLayout(centralWidget);
+        horizontalLayout_4->setSpacing(6);
+        horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
+        widget = new QWidget(centralWidget);
+        widget->setObjectName(QStringLiteral("widget"));
+        widget->setMaximumSize(QSize(281, 16777215));
+        verticalLayout = new QVBoxLayout(widget);
+        verticalLayout->setSpacing(6);
+        verticalLayout->setContentsMargins(11, 11, 11, 11);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        fileListWidget = new QListWidget(widget);
+        fileListWidget->setObjectName(QStringLiteral("fileListWidget"));
+        fileListWidget->setDragEnabled(false);
+        fileListWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
+        fileListWidget->setTextElideMode(Qt::ElideRight);
+
+        verticalLayout->addWidget(fileListWidget);
+
+        horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(30);
-        horizontalLayout->setContentsMargins(11, 11, 11, 11);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        addButton = new QPushButton(layoutWidget);
+        addButton = new QPushButton(widget);
         addButton->setObjectName(QStringLiteral("addButton"));
 
         horizontalLayout->addWidget(addButton);
 
-        removeButton = new QPushButton(layoutWidget);
+        removeButton = new QPushButton(widget);
         removeButton->setObjectName(QStringLiteral("removeButton"));
 
         horizontalLayout->addWidget(removeButton);
 
-        layoutWidget1 = new QWidget(centralWidget);
-        layoutWidget1->setObjectName(QStringLiteral("layoutWidget1"));
-        layoutWidget1->setGeometry(QRect(240, 10, 611, 491));
-        verticalLayout = new QVBoxLayout(layoutWidget1);
-        verticalLayout->setSpacing(20);
-        verticalLayout->setContentsMargins(11, 11, 11, 11);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
-        viewTabs = new QTabWidget(layoutWidget1);
-        viewTabs->setObjectName(QStringLiteral("viewTabs"));
 
-        verticalLayout->addWidget(viewTabs);
+        verticalLayout->addLayout(horizontalLayout);
 
-        fileListWidget = new QListWidget(centralWidget);
-        fileListWidget->setObjectName(QStringLiteral("fileListWidget"));
-        fileListWidget->setGeometry(QRect(10, 10, 211, 231));
-        fileListWidget->setDragEnabled(false);
-        fileListWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
-        fileListWidget->setTextElideMode(Qt::ElideRight);
-        gboxWindow = new QGroupBox(centralWidget);
-        gboxWindow->setObjectName(QStringLiteral("gboxWindow"));
-        gboxWindow->setGeometry(QRect(10, 410, 171, 101));
-        gboxWindow->setAutoFillBackground(true);
-        radN1 = new QRadioButton(gboxWindow);
-        radN1->setObjectName(QStringLiteral("radN1"));
-        radN1->setGeometry(QRect(10, 20, 82, 17));
-        radN1->setChecked(true);
-        radN3 = new QRadioButton(gboxWindow);
-        radN3->setObjectName(QStringLiteral("radN3"));
-        radN3->setGeometry(QRect(10, 60, 82, 17));
-        radN2 = new QRadioButton(gboxWindow);
-        radN2->setObjectName(QStringLiteral("radN2"));
-        radN2->setGeometry(QRect(10, 40, 82, 17));
-        radN4 = new QRadioButton(gboxWindow);
-        radN4->setObjectName(QStringLiteral("radN4"));
-        radN4->setGeometry(QRect(10, 80, 82, 17));
-        layoutWidget2 = new QWidget(centralWidget);
-        layoutWidget2->setObjectName(QStringLiteral("layoutWidget2"));
-        layoutWidget2->setGeometry(QRect(10, 290, 211, 69));
-        gridLayout = new QGridLayout(layoutWidget2);
+        gridLayout = new QGridLayout();
         gridLayout->setSpacing(6);
-        gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
-        gridLayout->setContentsMargins(0, 0, 0, 0);
-        horizontalSlider = new QSlider(layoutWidget2);
+        horizontalSlider = new QSlider(widget);
         horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
         horizontalSlider->setMinimum(1);
         horizontalSlider->setMaximum(255);
@@ -151,12 +127,12 @@ public:
 
         gridLayout->addWidget(horizontalSlider, 1, 0, 1, 1);
 
-        label = new QLabel(layoutWidget2);
+        label = new QLabel(widget);
         label->setObjectName(QStringLiteral("label"));
 
         gridLayout->addWidget(label, 0, 0, 1, 1);
 
-        spinBox = new QSpinBox(layoutWidget2);
+        spinBox = new QSpinBox(widget);
         spinBox->setObjectName(QStringLiteral("spinBox"));
         spinBox->setMaximumSize(QSize(50, 20));
         spinBox->setMinimum(1);
@@ -165,7 +141,7 @@ public:
 
         gridLayout->addWidget(spinBox, 1, 1, 1, 1);
 
-        spinBoxK = new QDoubleSpinBox(layoutWidget2);
+        spinBoxK = new QDoubleSpinBox(widget);
         spinBoxK->setObjectName(QStringLiteral("spinBoxK"));
         spinBoxK->setMinimum(0.01);
         spinBoxK->setMaximum(0.8);
@@ -174,57 +150,103 @@ public:
 
         gridLayout->addWidget(spinBoxK, 0, 1, 1, 1);
 
-        label_k = new QLabel(layoutWidget2);
+        label_k = new QLabel(widget);
         label_k->setObjectName(QStringLiteral("label_k"));
 
         gridLayout->addWidget(label_k, 0, 2, 1, 1);
 
-        label_Global = new QLabel(layoutWidget2);
+        label_Global = new QLabel(widget);
         label_Global->setObjectName(QStringLiteral("label_Global"));
 
         gridLayout->addWidget(label_Global, 1, 2, 1, 1);
 
-        widget = new QWidget(centralWidget);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(10, 360, 211, 41));
-        gridLayout_2 = new QGridLayout(widget);
-        gridLayout_2->setSpacing(6);
-        gridLayout_2->setContentsMargins(11, 11, 11, 11);
-        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
-        gridLayout_2->setContentsMargins(0, 0, 0, 0);
-        checkBoxAfterSmooth = new QCheckBox(widget);
-        checkBoxAfterSmooth->setObjectName(QStringLiteral("checkBoxAfterSmooth"));
 
-        gridLayout_2->addWidget(checkBoxAfterSmooth, 1, 3, 1, 1);
+        verticalLayout->addLayout(gridLayout);
 
+        gboxWindow = new QGroupBox(widget);
+        gboxWindow->setObjectName(QStringLiteral("gboxWindow"));
+        gboxWindow->setMinimumSize(QSize(256, 81));
+        gboxWindow->setMaximumSize(QSize(256, 16777215));
+        gboxWindow->setAutoFillBackground(true);
+        radN1 = new QRadioButton(gboxWindow);
+        radN1->setObjectName(QStringLiteral("radN1"));
+        radN1->setGeometry(QRect(10, 20, 82, 17));
+        radN1->setChecked(false);
+        radN2 = new QRadioButton(gboxWindow);
+        radN2->setObjectName(QStringLiteral("radN2"));
+        radN2->setGeometry(QRect(10, 40, 82, 17));
+        radN2->setChecked(true);
+        radN3 = new QRadioButton(gboxWindow);
+        radN3->setObjectName(QStringLiteral("radN3"));
+        radN3->setGeometry(QRect(10, 60, 82, 17));
+        radN4 = new QRadioButton(gboxWindow);
+        radN4->setObjectName(QStringLiteral("radN4"));
+        radN4->setGeometry(QRect(10, 80, 82, 17));
+
+        verticalLayout->addWidget(gboxWindow);
+
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
         checkBoxBeforeSmooth = new QCheckBox(widget);
         checkBoxBeforeSmooth->setObjectName(QStringLiteral("checkBoxBeforeSmooth"));
+        checkBoxBeforeSmooth->setGeometry(QRect(11, 383, 88, 17));
 
-        gridLayout_2->addWidget(checkBoxBeforeSmooth, 1, 0, 1, 1);
+        horizontalLayout_2->addWidget(checkBoxBeforeSmooth);
 
-        label_2 = new QLabel(widget);
-        label_2->setObjectName(QStringLiteral("label_2"));
+        labelCorners = new QLabel(widget);
+        labelCorners->setObjectName(QStringLiteral("labelCorners"));
 
-        gridLayout_2->addWidget(label_2, 0, 0, 1, 1);
+        horizontalLayout_2->addWidget(labelCorners);
+
+        labelNCorners = new QLabel(widget);
+        labelNCorners->setObjectName(QStringLiteral("labelNCorners"));
+
+        horizontalLayout_2->addWidget(labelNCorners);
+
+
+        verticalLayout->addLayout(horizontalLayout_2);
+
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        saveButton = new QPushButton(widget);
+        saveButton->setObjectName(QStringLiteral("saveButton"));
+        saveButton->setMaximumSize(QSize(108, 23));
+
+        horizontalLayout_3->addWidget(saveButton);
+
+        progressBar = new QProgressBar(widget);
+        progressBar->setObjectName(QStringLiteral("progressBar"));
+        progressBar->setValue(0);
+        progressBar->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
+        progressBar->setTextVisible(true);
+
+        horizontalLayout_3->addWidget(progressBar);
+
+
+        verticalLayout->addLayout(horizontalLayout_3);
+
+
+        horizontalLayout_4->addWidget(widget);
+
+        viewTabs = new QTabWidget(centralWidget);
+        viewTabs->setObjectName(QStringLiteral("viewTabs"));
+        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(viewTabs->sizePolicy().hasHeightForWidth());
+        viewTabs->setSizePolicy(sizePolicy);
+        viewTabs->setMinimumSize(QSize(680, 500));
+
+        horizontalLayout_4->addWidget(viewTabs);
 
         HarrisForm->setCentralWidget(centralWidget);
-        menuBar = new QMenuBar(HarrisForm);
-        menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 877, 21));
-        menuFile = new QMenu(menuBar);
-        menuFile->setObjectName(QStringLiteral("menuFile"));
-        menuHelp = new QMenu(menuBar);
-        menuHelp->setObjectName(QStringLiteral("menuHelp"));
-        HarrisForm->setMenuBar(menuBar);
         statusBar = new QStatusBar(HarrisForm);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         HarrisForm->setStatusBar(statusBar);
         QWidget::setTabOrder(addButton, removeButton);
         QWidget::setTabOrder(removeButton, fileListWidget);
-
-        menuBar->addAction(menuFile->menuAction());
-        menuBar->addAction(menuHelp->menuAction());
-        menuFile->addAction(actionExit);
 
         retranslateUi(HarrisForm);
         QObject::connect(actionExit, SIGNAL(triggered()), HarrisForm, SLOT(close()));
@@ -243,19 +265,18 @@ public:
         actionExit->setText(QApplication::translate("HarrisForm", "Exit", 0));
         addButton->setText(QApplication::translate("HarrisForm", "Add", 0));
         removeButton->setText(QApplication::translate("HarrisForm", "Remove", 0));
-        gboxWindow->setTitle(QApplication::translate("HarrisForm", "Non-maxima suppression window", 0));
-        radN1->setText(QApplication::translate("HarrisForm", "2 x 2", 0));
-        radN3->setText(QApplication::translate("HarrisForm", "4 x 4", 0));
-        radN2->setText(QApplication::translate("HarrisForm", "3 x 3", 0));
-        radN4->setText(QApplication::translate("HarrisForm", "5 x 5", 0));
         label->setText(QApplication::translate("HarrisForm", "Thresholds", 0));
         label_k->setText(QApplication::translate("HarrisForm", "k", 0));
         label_Global->setText(QApplication::translate("HarrisForm", "Global", 0));
-        checkBoxAfterSmooth->setText(QApplication::translate("HarrisForm", "Postprocessed", 0));
-        checkBoxBeforeSmooth->setText(QApplication::translate("HarrisForm", "Preprocessed", 0));
-        label_2->setText(QApplication::translate("HarrisForm", "Smoothing", 0));
-        menuFile->setTitle(QApplication::translate("HarrisForm", "File", 0));
-        menuHelp->setTitle(QApplication::translate("HarrisForm", "Help", 0));
+        gboxWindow->setTitle(QApplication::translate("HarrisForm", "Non-maxima suppression window", 0));
+        radN1->setText(QApplication::translate("HarrisForm", "2x2", 0));
+        radN2->setText(QApplication::translate("HarrisForm", "3x3", 0));
+        radN3->setText(QApplication::translate("HarrisForm", "4x4", 0));
+        radN4->setText(QApplication::translate("HarrisForm", "5 x 5", 0));
+        checkBoxBeforeSmooth->setText(QApplication::translate("HarrisForm", "Smoothing", 0));
+        labelCorners->setText(QApplication::translate("HarrisForm", "Corners detected: ", 0));
+        labelNCorners->setText(QApplication::translate("HarrisForm", "0", 0));
+        saveButton->setText(QApplication::translate("HarrisForm", "Save corners", 0));
     } // retranslateUi
 
 };

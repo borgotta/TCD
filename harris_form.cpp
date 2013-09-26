@@ -43,7 +43,9 @@ HarrisForm::HarrisForm(QWidget *parent)
 	QObject::connect(ui.radN4, SIGNAL(clicked()), this, SLOT(drawPoints()));
 	QObject::connect(ui.spinBoxK, SIGNAL(valueChanged(double)), this, SLOT(drawProcessed()));
 	QObject::connect(ui.checkBoxBeforeSmooth, SIGNAL(clicked()), this, SLOT(drawProcessed()));
-	//QObject::connect(ui.goButton, SIGNAL(clicked()), this, SLOT(processImages()));
+	QObject::connect(this, SIGNAL(progressChanged(int)), ui.progressBar, SLOT(setValue(int)));
+	QObject::connect(ui.saveButton, SIGNAL(clicked()), this, SLOT(saveCorners()));
+
 	files.clear();
 
 }
@@ -128,17 +130,10 @@ void HarrisForm::drawPoints() {
 		for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {
 			circle(gradient, *i, 1, Scalar(50,0,255), 2, 8, 0);
 		}
-
+		ui.labelNCorners->setText(QString::number(points.size()));
 		labelCorners->setPixmap(QPixmap::fromImage(Mat2QImageColor(gradient)));
 		labelCorners->adjustSize();
 
-	}
-}
-void HarrisForm::update() {
-	ui.fileListWidget->clear();
-
-	for (list<string>::iterator it = files.begin(); it!=files.end(); it++) {
-		ui.fileListWidget->addItem(QString::fromStdString(*it));
 	}
 }
 
@@ -147,22 +142,67 @@ void HarrisForm::removeItem() {
 		try {
 			files.remove(ui.fileListWidget->currentItem()->text().toLocal8Bit().constData());
 			//ui.fileListWidget->removeItemWidget(ui.fileListWidget->currentItem());
+			int current = ui.fileListWidget->currentRow();
 			qDeleteAll(ui.fileListWidget->selectedItems());
-			//TODO current row change
+			m_image = NULL;
+			if (ui.fileListWidget->count() != 0 ) {
+				if (ui.fileListWidget->count() > current) {
+				ui.fileListWidget->setCurrentRow(current);
+				} else {
+					ui.fileListWidget->setCurrentRow(current - 1);
+				}
+			}
 		} catch(...) {
 			throw;
 		}
-		//update();
 	}
 }
 
-void HarrisForm::processImages() {
-	if (files.size() != 0) {
-		
-
+void HarrisForm::saveCorners() {
+	if (ui.fileListWidget->count() < 1) {
+		return; 
 	} else {
-		QMessageBox msgBox;
-		msgBox.setText("No images to process!");
-		msgBox.exec();
+		int n = 0;
+		int wind_n = 1;
+		if (ui.radN1->isChecked()) {
+			wind_n = 2;
+		} else if (ui.radN2->isChecked()) {
+			wind_n = 3;
+		} else if (ui.radN3->isChecked()) {
+			wind_n = 4;
+		} 
+		int total = ui.fileListWidget->count();
+		ui.progressBar->setMaximum(total);
+		emit progressChanged((n));
+		QString folder_name = QFileDialog::getExistingDirectory(this,
+		tr("Choose directory"));
+		if (!folder_name.isEmpty()) {
+			for (int i = 0; i < total; i++) {
+				TCD::Image* current = (TCD::Image*)ui.fileListWidget->item(i);
+				current->harris.init(current->getGrayscale(),1, (float)ui.spinBoxK->value(), ui.checkBoxBeforeSmooth->isChecked());
+				QFileInfo file(QString::fromLocal8Bit(current->getFilename().data()));
+				if (file.exists()) {
+					string corners_filename = string(folder_name.toLocal8Bit().data()) + "/Harris_" + string(file.baseName().toLocal8Bit().constData()) + ".xml";
+					FileStorage fs(corners_filename, FileStorage::WRITE);
+					vector<Point2i> points = current->harris.getCorners(ui.horizontalSlider->value(), wind_n);
+					fs<<"corners"<<"[";
+					for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {
+						fs<< "{:" << "y" << i->y << "x" << i->x << "}";
+					}
+					fs<<"]";
+					fs.release();
+					string response_filename = string(folder_name.toLocal8Bit().data()) + "/Harris_Response_" + string(file.baseName().toLocal8Bit().constData()) + ".jpg";
+					imwrite(response_filename, current->harris.getResponse());
+					Mat gradient = current->getGrayscale();
+					cvtColor(gradient, gradient, CV_GRAY2RGB);
+					for(vector<Point2i>::iterator i = points.begin(); i != points.end(); i++) {
+						circle(gradient, *i, 1, Scalar(0,0,255), 2, 8, 0);
+					}
+					string ponts_filename = string(folder_name.toLocal8Bit().data()) + "/Harris_Points_" + string(file.baseName().toLocal8Bit().constData()) + ".jpg";
+					imwrite(ponts_filename, gradient);
+				}
+				progressChanged((++n));
+			}
+		}
 	}
 }
